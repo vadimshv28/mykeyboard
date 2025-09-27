@@ -143,100 +143,247 @@ static void update_dpi_adaptive(int16_t x, int16_t y) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_BASE_RU] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-        KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,       KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_MINS,
+        KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,       KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BTN3,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_BSLS,
+        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_LBRC,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,       KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
+       RU_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,       KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, RU_RSFT,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_LCTL,    PT_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, PT_SLSH, KC_LALT,
+       KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, KC_RBRC, KC_TILD,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                   KC_LGUI, KC_SPC,   LOWER,      RAISE,  KC_ENT,
-                                           KC_LALT, KC_BSPC,     KC_DEL
+                                 KC_BTN1, KC_SPC,   KC_BTN2,     KC_DEL,  KC_ENT,
+                                      SCROLL_CARET, ALT_GUI,    KC_BSPC
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
-  [LAYER_LOWER] = LAYOUT(
+  [LAYER_BASE_RU_SHIFT] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-       KC_TILD, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS,
+        KC_ESC,  XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX, KC_BTN3,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       RGB_MOD, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    KC_LBRC,   KC_P7,   KC_P8,   KC_P9, KC_RBRC, XXXXXXX,
+        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_LBRC,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       RGB_TOG, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,    KC_PPLS,   KC_P4,   KC_P5,   KC_P6, KC_PMNS, KC_PEQL,
+       _______,     KC_A,    KC_S,    KC_D,    KC_F,    KC_G,       KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, _______,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-      RGB_RMOD, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    KC_PAST,   KC_P1,   KC_P2,   KC_P3, KC_PSLS, KC_PDOT,
+        KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, KC_RBRC, KC_TILD,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                  XXXXXXX, XXXXXXX, _______,    XXXXXXX, _______,
-                                           XXXXXXX, XXXXXXX,      KC_P0
+                                 KC_BTN1, KC_SPC,   KC_BTN2,     KC_DEL,  KC_ENT,
+                                           XXXXXXX, ALT_GUI,    KC_BSPC
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
-  [LAYER_RAISE] = LAYOUT(
+  [LAYER_BASE_EN] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-        KC_F12,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,      KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,
+        KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,       KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BTN3,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_MNXT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_VOLU,
+        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_MPLY, KC_LEFT,   KC_UP, KC_DOWN, KC_RGHT, XXXXXXX,    XXXXXXX, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, KC_MUTE,
+       EN_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,       KC_H,    KC_J,    KC_K,    KC_L, XXXXXXX, EN_RSFT,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_MPRV, KC_HOME, KC_PGUP, KC_PGDN,  KC_END, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_VOLD,
+       KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                  _______, _______, XXXXXXX,    _______, XXXXXXX,
-                                           _______, _______,    XXXXXXX
+                                 KC_BTN1, KC_SPC,   KC_BTN2,     KC_BTN2,  KC_ENT,
+                                      SCROLL_CARET, ALT_GUI,    KC_BSPC
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
-  [LAYER_POINTER] = LAYOUT(
+  [LAYER_BASE_EN_SHIFT] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_ESC,  XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX, KC_BTN3,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DPI_MOD, S_D_MOD,    S_D_MOD, DPI_MOD, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       XXXXXXX, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,    XXXXXXX, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI, XXXXXXX,
+       _______,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,       KC_H,    KC_J,    KC_K,    KC_L, XXXXXXX, _______,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       XXXXXXX, _______, DRGSCRL, SNIPING, EE_CLR,  QK_BOOT,    QK_BOOT, EE_CLR,  SNIPING, DRGSCRL, _______, XXXXXXX,
+        KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                  KC_BTN2, KC_BTN1, KC_BTN3,    KC_BTN3, KC_BTN1,
-                                           XXXXXXX, KC_BTN2,    KC_BTN2
+                                 KC_BTN1, KC_SPC,   KC_BTN2,     KC_BTN2,  KC_ENT,
+                                           XXXXXXX, ALT_GUI,    KC_BSPC
+  //                            ╰───────────────────────────╯ ╰──────────────────╯
+  ),
+
+  [LAYER_SCROLL] = LAYOUT(
+  // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
+       KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,      KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,   KC_F12,
+  // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
+       KC_TAB, KC_HOME, KC_PGDN, KC_PGUP, KC_END, XXXXXXX,     XXXXXXX,   KC_P7,   KC_P8,   KC_P9, XXXXXXX, XXXXXXX,
+  // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
+       KC_LSFT, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, XXXXXXX,    XXXXXXX,   KC_P4,   KC_P5,   KC_P6, XXXXXXX, XXXXXXX,
+  // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
+       KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,   KC_P1,   KC_P2,   KC_P3, XXXXXXX, XXXXXXX,
+  // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
+                                  XXXXXXX, XXXXXXX, QK_BOOT,    XXXXXXX, KC_P0,
+                                            _______, EE_CLR,    XXXXXXX
+  //                            ╰───────────────────────────╯ ╰──────────────────╯
+  ),
+
+  [LAYER_CARET] = LAYOUT(
+  // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
+       KC_TAB,  SS("@"), SS(";"), SS("/"), SS("="), SS("*"), SS("("), SS(")"), SS("<"), SS(">"), SS("#"), SS("_"),
+  // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
+       KC_LSFT, SS("№"), SS(":"), SS("|"), SS("%"), SS("+"), SS("["), SS("]"), SS(","), SS("."), SS("\""), SS("'"),
+  // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
+       KC_LCTL, SS("$"), SS("&"), SS("\\"), SS("^"), SS("-"), SS("{"), SS("}"), SS("?"), SS("!"), SS("`"), SS("~"),
+  // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
+                                   XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX,
+                                            _______, XXXXXXX,     XXXXXXX
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 };
 // clang-format on
 
-#ifdef POINTING_DEVICE_ENABLE
-#    ifdef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
-report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    if (abs(mouse_report.x) > CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD || abs(mouse_report.y) > CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD) {
-        if (auto_pointer_layer_timer == 0) {
-            layer_on(LAYER_CARET);
-#        ifdef RGB_MATRIX_ENABLE
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_NONE);
-            rgb_matrix_sethsv_noeeprom(HSV_GREEN);
-#        endif // RGB_MATRIX_ENABLE
-        }
-        auto_pointer_layer_timer = timer_read();
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case RU_LSFT:
+            if (record->event.pressed) {
+                layer_on(LAYER_BASE_RU_SHIFT);
+                register_code(KC_LSFT);
+            } else {
+                layer_off(LAYER_BASE_RU_SHIFT);
+                unregister_code(KC_LSFT);
+            }
+            return false;
+        case RU_RSFT:
+            if (record->event.pressed) {
+                ru_rsft_timer = timer_read();
+                layer_on(LAYER_BASE_RU_SHIFT);
+                register_code(KC_RSFT);
+            } else {
+                unregister_code(KC_RSFT);
+                layer_off(LAYER_BASE_RU_SHIFT);
+                if (timer_elapsed(ru_rsft_timer) < TAPPING_TERM) {
+                    tap_code(KC_QUOT);
+                }
+            }
+            return false;
+        case EN_LSFT:
+            if (record->event.pressed) {
+                layer_on(LAYER_BASE_EN_SHIFT);
+                register_code(KC_LSFT);
+            } else {
+                layer_off(LAYER_BASE_EN_SHIFT);
+                unregister_code(KC_LSFT);
+            }
+            return false;
+        case EN_RSFT:
+            if (record->event.pressed) {
+                layer_on(LAYER_BASE_EN_SHIFT);
+                register_code(KC_RSFT);
+            } else {
+                unregister_code(KC_RSFT);
+                layer_off(LAYER_BASE_EN_SHIFT);
+            }
+            return false;
+        case ALT_GUI:
+            if (record->event.pressed) {
+                if (timer_elapsed(alt_last_release) < TAPPING_TERM) {
+                    alt_gui_mode = true;
+                    register_code(KC_LGUI);
+                } else {
+                    alt_gui_mode = false;
+                    register_code(KC_LALT);
+                }
+            } else {
+                if (alt_gui_mode) {
+                    unregister_code(KC_LGUI);
+                } else {
+                    unregister_code(KC_LALT);
+                }
+                alt_last_release = timer_read();
+            }
+            return false;
+        case SCROLL_CARET:
+            if (record->event.pressed) {
+                if (timer_elapsed(scroll_caret_last_release) < TAPPING_TERM) {
+                    // Двойное нажатие - переходим на LAYER_CARET
+                    scroll_caret_symbol_mode = true;
+                    layer_on(LAYER_CARET);
+                    set_pointer_mode(POINTER_MODE_CARET);
+                } else {
+                    // Одиночное удержание - переходим на LAYER_SCROLL
+                    scroll_caret_symbol_mode = false;
+                    layer_on(LAYER_SCROLL);
+                    set_pointer_mode(POINTER_MODE_SCROLL);
+                }
+            } else {
+                if (scroll_caret_symbol_mode) {
+                    layer_off(LAYER_CARET);
+                } else {
+                    layer_off(LAYER_SCROLL);
+                }
+                set_pointer_mode(POINTER_MODE_MOUSE);
+                scroll_caret_last_release = timer_read();
+            }
+            return false;
     }
+    
+    // Обработка символьных кейкодов
+    if (keycode >= SYMBOL_KEY_BASE && keycode <= SYMBOL_KEY_BASE + 255) {
+        if (record->event.pressed) {
+            uint8_t symbol = keycode - SYMBOL_KEY_BASE;
+            char str[2] = {(char)symbol, '\0'};
+            // Специальные случаи для многобайтовых символов
+            if (symbol == 0xE2) {
+                send_string("№");
+            } else {
+                send_string(str);
+            }
+        }
+        return false;
+    }
+    
+    return true;
+}
+
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    switch (pointer_mode) {
+        case POINTER_MODE_MOUSE:
+            // Адаптивный DPI в базовых слоях
+            update_dpi_adaptive(mouse_report.x, mouse_report.y);
+            return mouse_report;
+            
+        case POINTER_MODE_SCROLL:
+            // Режим прокрутки - движения превращаем в прокрутку
+            mouse_report.h = mouse_report.x;
+            mouse_report.v = -mouse_report.y;
+            mouse_report.x = 0;
+            mouse_report.y = 0;
+            return mouse_report;
+            
+        case POINTER_MODE_CARET:
+            // Режим каретки - движения превращаем в стрелки
+            caret_mode_x += mouse_report.x;
+            caret_mode_y += mouse_report.y;
+
+            while (caret_mode_x >= CARET_MODE_STEP) {
+                tap_code(KC_RGHT);
+                caret_mode_x -= CARET_MODE_STEP;
+            }
+            while (caret_mode_x <= -CARET_MODE_STEP) {
+                tap_code(KC_LEFT);
+                caret_mode_x += CARET_MODE_STEP;
+            }
+
+            while (caret_mode_y >= CARET_MODE_STEP) {
+                tap_code(KC_DOWN);
+                caret_mode_y -= CARET_MODE_STEP;
+            }
+            while (caret_mode_y <= -CARET_MODE_STEP) {
+                tap_code(KC_UP);
+                caret_mode_y += CARET_MODE_STEP;
+            }
+
+            // Убираем движение мыши
+            mouse_report.x = 0;
+            mouse_report.y = 0;
+            mouse_report.h = 0;
+            mouse_report.v = 0;
+            return mouse_report;
+    }
+    
     return mouse_report;
 }
-
-void matrix_scan_user(void) {
-    if (auto_pointer_layer_timer != 0 && TIMER_DIFF_16(timer_read(), auto_pointer_layer_timer) >= CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS) {
-        auto_pointer_layer_timer = 0;
-        layer_off(LAYER_CARET);
-#        ifdef RGB_MATRIX_ENABLE
-        rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
-#        endif // RGB_MATRIX_ENABLE
-    }
-}
-#    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
-
-#    ifdef CHARYBDIS_AUTO_SNIPING_ON_LAYER
-layer_state_t layer_state_set_user(layer_state_t state) {
-    charybdis_set_pointer_sniping_enabled(layer_state_cmp(state, CHARYBDIS_AUTO_SNIPING_ON_LAYER));
-    return state;
-}
-#    endif // CHARYBDIS_AUTO_SNIPING_ON_LAYER
-#endif     // POINTING_DEVICE_ENABLE
 
 #ifdef RGB_MATRIX_ENABLE
 // Forward-declare this helper function since it is defined in rgb_matrix.c.
@@ -254,4 +401,100 @@ bool shutdown_user(bool jump_to_bootloader) {
     rgb_matrix_update_pwm_buffers();
 #endif // RGB_MATRIX_ENABLE
     return false;
+}
+
+#ifdef COMBO_ENABLE
+enum combo_events {
+    COMBO_BASE_RU,
+    COMBO_BASE_EN,
+    COMBO_LENGTH,
+};
+
+const uint16_t PROGMEM combo_base_ru[] = {KC_V, KC_B, COMBO_END};
+const uint16_t PROGMEM combo_base_en[] = {KC_F, KC_G, COMBO_END};
+
+combo_t key_combos[COMBO_LENGTH] = {
+    [COMBO_BASE_RU] = COMBO_ACTION(combo_base_ru),
+    [COMBO_BASE_EN] = COMBO_ACTION(combo_base_en),
+};
+
+void process_combo_event(uint16_t combo_index, bool pressed) {
+    if (!pressed) {
+        return;
+    }
+
+    switch (combo_index) {
+        case COMBO_BASE_RU:
+            layer_move(LAYER_BASE_RU);
+            break;
+        case COMBO_BASE_EN:
+            layer_move(LAYER_BASE_EN);
+            break;
+    }
+}
+#endif
+
+bool rgb_matrix_indicators_user(void) {
+    // Определяем цвета для разных слоёв
+    switch (get_highest_layer(layer_state)) {
+        case LAYER_BASE_RU:
+            // Русский слой - фиолетовый (30% яркость)
+            rgb_matrix_sethsv_noeeprom(191, 255, 76);
+            break;
+        case LAYER_BASE_RU_SHIFT:
+            // Русский Shift - светло-фиолетовый (30% яркость)
+            rgb_matrix_sethsv_noeeprom(200, 200, 76);
+            break;
+        case LAYER_BASE_EN:
+            // Английский слой - синий (30% яркость)
+            rgb_matrix_sethsv_noeeprom(170, 255, 76);
+            break;
+        case LAYER_BASE_EN_SHIFT:
+            // Английский Shift - светло-синий (30% яркость)
+            rgb_matrix_sethsv_noeeprom(160, 200, 76);
+            break;
+        case LAYER_SCROLL:
+            // Слой прокрутки - зелёный (30% яркость)
+            rgb_matrix_sethsv_noeeprom(85, 255, 76);
+            break;
+        case LAYER_CARET:
+            // Слой каретки - жёлтый (30% яркость)
+            rgb_matrix_sethsv_noeeprom(43, 255, 76);
+            break;
+        default:
+            // По умолчанию - фиолетовый (30% яркость)
+            rgb_matrix_sethsv_noeeprom(191, 255, 76);
+            break;
+    }
+    
+    return false;
+}
+#endif // RGB_MATRIX_ENABLE
+
+void keyboard_post_init_user(void) {
+    // Инициализируем все переменные
+    ru_rsft_timer = 0;
+    alt_last_release = 0; 
+    alt_gui_mode = false;
+    scroll_caret_last_release = 0;
+    scroll_caret_symbol_mode = false;
+    caret_mode_x = 0;
+    caret_mode_y = 0;
+    pointer_mode = POINTER_MODE_MOUSE;
+    
+    // Устанавливаем начальный DPI
+    pointing_device_set_cpi(DPI_MIN);
+    current_dpi = DPI_MIN;
+    
+    // Убеждаемся что мы начинаем с базового слоя
+    layer_move(LAYER_BASE_RU);
+    
+#ifdef RGB_MATRIX_ENABLE
+    // Включаем RGB матрицу
+    rgb_matrix_enable();
+    // Устанавливаем режим статического цвета
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    // Устанавливаем начальный цвет (фиолетовый для базового слоя с яркостью 30%)
+    rgb_matrix_sethsv_noeeprom(191, 255, 76);
+#endif // RGB_MATRIX_ENABLE
 }
