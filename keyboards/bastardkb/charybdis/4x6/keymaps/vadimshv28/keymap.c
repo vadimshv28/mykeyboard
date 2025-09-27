@@ -71,7 +71,7 @@ static bool     scroll_caret_symbol_mode    = false;
 // Адаптивный DPI трекбола
 #define DPI_MIN 150
 #define DPI_MAX 450
-#define DPI_SCROLL 50
+#define DPI_SCROLL 25
 #define DPI_CARET 200
 #define SPEED_THRESHOLD_SLOW 1
 #define SPEED_THRESHOLD_FAST 2
