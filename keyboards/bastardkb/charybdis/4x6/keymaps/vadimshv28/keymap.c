@@ -446,6 +446,13 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 
 #ifdef RGB_MATRIX_ENABLE
 bool rgb_matrix_indicators_user(void) {
+    // Проверяем сначала состояние CAPS LOCK
+    if (host_keyboard_led_state().caps_lock) {
+        // Если CAPS LOCK включен - жёлтый во всех слоях (30% яркость)
+        rgb_matrix_sethsv_noeeprom(43, 255, 76);
+        return false;
+    }
+    
     // Определяем цвета для разных слоёв
     switch (get_highest_layer(layer_state)) {
         case LAYER_BASE_RU:
@@ -469,8 +476,8 @@ bool rgb_matrix_indicators_user(void) {
             rgb_matrix_sethsv_noeeprom(85, 255, 76);
             break;
         case LAYER_CARET:
-            // Слой каретки - жёлтый (30% яркость)
-            rgb_matrix_sethsv_noeeprom(43, 255, 76);
+            // Слой каретки - синий (30% яркость)
+            rgb_matrix_sethsv_noeeprom(170, 255, 76);
             break;
         default:
             // По умолчанию - белый (30% яркость) 
