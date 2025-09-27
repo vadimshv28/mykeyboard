@@ -19,8 +19,9 @@
 #include <print.h>
 #ifdef UNICODE_ENABLE
 #include "process_unicode.h"
+#endif
 
-// Хелпер: отправка Alt-кода через NumPad
+// Хелпер: отправка Alt-кода через NumPad (не зависит от Unicode)
 static void send_alt_code(const char *digits) {
     register_code(KC_LALT);
     for (const char *p = digits; *p; p++) {
@@ -39,9 +40,6 @@ static void send_alt_code(const char *digits) {
     }
     unregister_code(KC_LALT);
 }
-
-// Таблица больше не нужна - используется динамическое преобразование кода в строку
-#endif
 
 // Не определяем RGB коды напрямую, используем HSV
 
