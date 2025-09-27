@@ -567,16 +567,12 @@ void keyboard_post_init_user(void) {
     current_dpi = DPI_MIN;
 #endif
 
-    // Настраиваем Unicode для Windows (ЕДИНСТВЕННЫЙ способ независимости от раскладки!)
-#ifdef UNICODE_ENABLE
-    unicode_config.input_mode = UNICODE_MODE_WINDOWS;  // Windows Unicode mode
-#endif
+    // Unicode режим настроен в config.h через UNICODE_SELECTED_INPUT_MODE
 
     // Убеждаемся что мы начинаем с базового слоя
     layer_move(LAYER_BASE_RU);
 
 #ifdef RGB_MATRIX_ENABLE
-    // Включаем RGB матрицу
     rgb_matrix_enable();
     // Устанавливаем режим статического цвета
     rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
