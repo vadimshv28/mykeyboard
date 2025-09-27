@@ -341,116 +341,115 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
             uint8_t symbol = keycode - SYMBOL_KEY_BASE;
 
-            // ВСЕ символы через Unicode для полной независимости от раскладки
+            // ВСЕ символы через tap_code16() - ЕДИНСТВЕННЫЙ способ независимости от раскладки
             switch (symbol) {
                 // Строка 1: @ ; / = * ( ) < > # _
-                case '@':  // U+0040 COMMERCIAL AT
-                    register_unicode(0x0040);
+                case '@':  // @ = Shift + 2
+                    tap_code16(S(KC_2));
                     break;
-                case ';':  // U+003B SEMICOLON
-                    register_unicode(0x003B);
+                case ';':  // ; = ;
+                    tap_code(KC_SCLN);
                     break;
-                case '/':  // U+002F SOLIDUS
-                    register_unicode(0x002F);
+                case '/':  // / = /
+                    tap_code(KC_SLSH);
                     break;
-                case '=':  // U+003D EQUALS SIGN
-                    register_unicode(0x003D);
+                case '=':  // = = =
+                    tap_code(KC_EQL);
                     break;
-                case '*':  // U+002A ASTERISK
-                    register_unicode(0x002A);
+                case '*':  // * = Shift + 8
+                    tap_code16(S(KC_8));
                     break;
-                case '(':  // U+0028 LEFT PARENTHESIS
-                    register_unicode(0x0028);
+                case '(':  // ( = Shift + 9
+                    tap_code16(S(KC_9));
                     break;
-                case ')':  // U+0029 RIGHT PARENTHESIS
-                    register_unicode(0x0029);
+                case ')':  // ) = Shift + 0
+                    tap_code16(S(KC_0));
                     break;
-                case '<':  // U+003C LESS-THAN SIGN
-                    register_unicode(0x003C);
+                case '<':  // < = Shift + ,
+                    tap_code16(S(KC_COMM));
                     break;
-                case '>':  // U+003E GREATER-THAN SIGN
-                    register_unicode(0x003E);
+                case '>':  // > = Shift + .
+                    tap_code16(S(KC_DOT));
                     break;
-                case '#':  // U+0023 NUMBER SIGN
-                    register_unicode(0x0023);
+                case '#':  // # = Shift + 3
+                    tap_code16(S(KC_3));
                     break;
-                case '_':  // U+005F LOW LINE
-                    register_unicode(0x005F);
+                case '_':  // _ = Shift + -
+                    tap_code16(S(KC_MINS));
                     break;
-                
+
                 // Строка 2: № : | % + [ ] , . " '
-                case 0xE2:  // Многобайтовый символ № (U+2116)
+                case 0xE2:  // № - специальный символ, через Unicode
                     register_unicode(0x2116);
                     break;
-                case ':':  // U+003A COLON
-                    register_unicode(0x003A);
+                case ':':  // : = Shift + ;
+                    tap_code16(S(KC_SCLN));
                     break;
-                case '|':  // U+007C VERTICAL LINE
-                    register_unicode(0x007C);
+                case '|':  // | = Shift + \
+                    tap_code16(S(KC_BSLS));
                     break;
-                case '%':  // U+0025 PERCENT SIGN
-                    register_unicode(0x0025);
+                case '%':  // % = Shift + 5
+                    tap_code16(S(KC_5));
                     break;
-                case '+':  // U+002B PLUS SIGN
-                    register_unicode(0x002B);
+                case '+':  // + = Shift + =
+                    tap_code16(S(KC_EQL));
                     break;
-                case '[':  // U+005B LEFT SQUARE BRACKET
-                    register_unicode(0x005B);
+                case '[':  // [ = [
+                    tap_code(KC_LBRC);
                     break;
-                case ']':  // U+005D RIGHT SQUARE BRACKET
-                    register_unicode(0x005D);
+                case ']':  // ] = ]
+                    tap_code(KC_RBRC);
                     break;
-                case ',':  // U+002C COMMA
-                    register_unicode(0x002C);
+                case ',':  // , = ,
+                    tap_code(KC_COMM);
                     break;
-                case '.':  // U+002E FULL STOP
-                    register_unicode(0x002E);
+                case '.':  // . = .
+                    tap_code(KC_DOT);
                     break;
-                case '\"': // U+0022 QUOTATION MARK
-                    register_unicode(0x0022);
+                case '\"': // " = Shift + '
+                    tap_code16(S(KC_QUOT));
                     break;
-                case '\'': // U+0027 APOSTROPHE
-                    register_unicode(0x0027);
+                case '\'': // ' = '
+                    tap_code(KC_QUOT);
                     break;
-                
+
                 // Строка 3: $ & \ ^ - { } ? ! ` ~
-                case '$':  // U+0024 DOLLAR SIGN
-                    register_unicode(0x0024);
+                case '$':  // $ = Shift + 4
+                    tap_code16(S(KC_4));
                     break;
-                case '&':  // U+0026 AMPERSAND
-                    register_unicode(0x0026);
+                case '&':  // & = Shift + 7
+                    tap_code16(S(KC_7));
                     break;
-                case '\\': // U+005C REVERSE SOLIDUS
-                    register_unicode(0x005C);
+                case '\\': // \ = \
+                    tap_code(KC_BSLS);
                     break;
-                case '^':  // U+005E CIRCUMFLEX ACCENT
-                    register_unicode(0x005E);
+                case '^':  // ^ = Shift + 6
+                    tap_code16(S(KC_6));
                     break;
-                case '-':  // U+002D HYPHEN-MINUS
-                    register_unicode(0x002D);
+                case '-':  // - = -
+                    tap_code(KC_MINS);
                     break;
-                case '{':  // U+007B LEFT CURLY BRACKET
-                    register_unicode(0x007B);
+                case '{':  // { = Shift + [
+                    tap_code16(S(KC_LBRC));
                     break;
-                case '}':  // U+007D RIGHT CURLY BRACKET
-                    register_unicode(0x007D);
+                case '}':  // } = Shift + ]
+                    tap_code16(S(KC_RBRC));
                     break;
-                case '?':  // U+003F QUESTION MARK
-                    register_unicode(0x003F);
+                case '?':  // ? = Shift + /
+                    tap_code16(S(KC_SLSH));
                     break;
-                case '!':  // U+0021 EXCLAMATION MARK
-                    register_unicode(0x0021);
+                case '!':  // ! = Shift + 1
+                    tap_code16(S(KC_1));
                     break;
-                case '`':  // U+0060 GRAVE ACCENT
-                    register_unicode(0x0060);
+                case '`':  // ` = `
+                    tap_code(KC_GRV);
                     break;
-                case '~':  // U+007E TILDE
-                    register_unicode(0x007E);
+                case '~':  // ~ = Shift + `
+                    tap_code16(S(KC_GRV));
                     break;
-                
+
                 default:
-                    // Для остальных ASCII символов используем прямой Unicode код
-                    register_unicode((uint32_t)symbol);
+                    // Для неизвестных символов ничего не делаем (или можно добавить обработку)
                     break;
             }
         }
@@ -631,7 +630,7 @@ void keyboard_post_init_user(void) {
     current_dpi = DPI_MIN;
 #endif
 
-    // Настраиваем Unicode input для Windows 
+    // Настраиваем Unicode input для Windows
 #ifdef UNICODE_ENABLE
     set_unicode_input_mode(0);  // 0 = Windows mode
 #endif
