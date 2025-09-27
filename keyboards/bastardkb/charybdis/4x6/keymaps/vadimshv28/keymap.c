@@ -336,6 +336,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
+#ifdef POINTING_DEVICE_ENABLE
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     switch (pointer_mode) {
         case POINTER_MODE_MOUSE:
@@ -384,6 +385,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     
     return mouse_report;
 }
+#endif // POINTING_DEVICE_ENABLE
 
 #ifdef RGB_MATRIX_ENABLE
 // Forward-declare this helper function since it is defined in rgb_matrix.c.
@@ -434,6 +436,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 }
 #endif
 
+#ifdef RGB_MATRIX_ENABLE
 bool rgb_matrix_indicators_user(void) {
     // Определяем цвета для разных слоёв
     switch (get_highest_layer(layer_state)) {
@@ -483,8 +486,10 @@ void keyboard_post_init_user(void) {
     pointer_mode = POINTER_MODE_MOUSE;
     
     // Устанавливаем начальный DPI
+#ifdef POINTING_DEVICE_ENABLE
     pointing_device_set_cpi(DPI_MIN);
     current_dpi = DPI_MIN;
+#endif
     
     // Убеждаемся что мы начинаем с базового слоя
     layer_move(LAYER_BASE_RU);

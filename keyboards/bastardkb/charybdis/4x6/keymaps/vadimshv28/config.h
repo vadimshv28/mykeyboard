@@ -16,10 +16,8 @@
  */
 #pragma once
 
-#ifdef VIA_ENABLE
-/* VIA configuration. */
-#    define DYNAMIC_KEYMAP_LAYER_COUNT 4
-#endif // VIA_ENABLE
+/* Keymap configuration. */
+#define DYNAMIC_KEYMAP_LAYER_COUNT 6
 
 /* Disable unused features. */
 #define NO_ACTION_ONESHOT
