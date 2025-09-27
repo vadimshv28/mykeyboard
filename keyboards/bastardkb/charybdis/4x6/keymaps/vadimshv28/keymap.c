@@ -71,7 +71,7 @@ static bool     scroll_caret_symbol_mode    = false;
 // Адаптивный DPI трекбола
 #define DPI_MIN 150
 #define DPI_MAX 450
-#define DPI_SCROLL 25
+#define DPI_SCROLL 10
 #define DPI_CARET 200
 #define SPEED_THRESHOLD_SLOW 1
 #define SPEED_THRESHOLD_FAST 2
@@ -112,6 +112,11 @@ static void set_pointer_mode(pointer_mode_t mode) {
 
 static void update_dpi_adaptive(int16_t x, int16_t y) {
 #ifdef POINTING_DEVICE_ENABLE
+    // Адаптивный DPI ТОЛЬКО в режиме мыши, не в скролле или каретке
+    if (pointer_mode != POINTER_MODE_MOUSE) {
+        return;
+    }
+    
     // Вычисляем скорость движения (максимум из x и y)
     uint16_t speed = MAX(abs(x), abs(y));
     uint16_t target_dpi;
@@ -478,8 +483,14 @@ bool rgb_matrix_indicators_user(void) {
             rgb_matrix_sethsv_noeeprom(191, 255, 102);
             break;
         case LAYER_SCROLL:
-            // Слой прокрутки - зелёный (30% яркость)
-            rgb_matrix_sethsv_noeeprom(85, 255, 76);
+            // Слой прокрутки - показываем режим указателя
+            if (pointer_mode == POINTER_MODE_SCROLL) {
+                // Если в режиме скролла - красный (DPI должен быть 10)
+                rgb_matrix_sethsv_noeeprom(0, 255, 76);
+            } else {
+                // Если НЕ в режиме скролла - зелёный 
+                rgb_matrix_sethsv_noeeprom(85, 255, 76);
+            }
             break;
         case LAYER_CARET:
             // Слой каретки - синий (30% яркость)
