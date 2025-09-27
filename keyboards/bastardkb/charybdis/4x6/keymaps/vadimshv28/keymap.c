@@ -9,14 +9,19 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
+#include <stdio.h>
+#include <math.h>
+#include <print.h>
+#ifdef UNICODE_ENABLE
+#include "process_unicode.h"
+#endif
 
-#ifdef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
+// Не определяем RGB коды напрямую, используем HSV_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 #    include "timer.h"
 #endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
@@ -334,14 +339,55 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
             uint8_t symbol = keycode - SYMBOL_KEY_BASE;
 
-            // Все символы отправляем через SEND_STRING для независимости от раскладки
-            if (symbol == 0xE2) {
-                // Многобайтовый символ №
-                SEND_STRING("№");
-            } else {
-                // Все ASCII символы через SEND_STRING
-                char str[2] = {(char)symbol, '\0'};
-                SEND_STRING(str);
+            // Отправляем символы через Unicode для полной независимости от раскладки
+            switch (symbol) {
+                case ':':  // U+003A COLON
+                    send_unicode_hex_string("003A");
+                    break;
+                case ';':  // U+003B SEMICOLON  
+                    send_unicode_hex_string("003B");
+                    break;
+                case '/':  // U+002F SOLIDUS
+                    send_unicode_hex_string("002F");
+                    break;
+                case '?':  // U+003F QUESTION MARK
+                    send_unicode_hex_string("003F");
+                    break;
+                case '<':  // U+003C LESS-THAN SIGN
+                    send_unicode_hex_string("003C");
+                    break;
+                case '>':  // U+003E GREATER-THAN SIGN
+                    send_unicode_hex_string("003E");
+                    break;
+                case ',':  // U+002C COMMA
+                    send_unicode_hex_string("002C");
+                    break;
+                case '.':  // U+002E FULL STOP
+                    send_unicode_hex_string("002E");
+                    break;
+                case '|':  // U+007C VERTICAL LINE
+                    send_unicode_hex_string("007C");
+                    break;
+                case '\\': // U+005C REVERSE SOLIDUS
+                    send_unicode_hex_string("005C");
+                    break;
+                case '\"': // U+0022 QUOTATION MARK
+                    send_unicode_hex_string("0022");
+                    break;
+                case '\'': // U+0027 APOSTROPHE
+                    send_unicode_hex_string("0027");
+                    break;
+                case 0xE2:  // Многобайтовый символ № (U+2116)
+                    send_unicode_hex_string("2116");
+                    break;
+                default:
+                    // Для остальных ASCII символов используем прямой Unicode код
+                    {
+                        char hex_str[5];
+                        snprintf(hex_str, sizeof(hex_str), "%04X", symbol);
+                        send_unicode_hex_string(hex_str);
+                    }
+                    break;
             }
         }
         return false;
@@ -519,6 +565,11 @@ void keyboard_post_init_user(void) {
 #ifdef POINTING_DEVICE_ENABLE
     pointing_device_set_cpi(DPI_MIN);
     current_dpi = DPI_MIN;
+#endif
+
+    // Настраиваем Unicode input для Windows (можно изменить на UC_LNX для Linux, UC_MAC для macOS)
+#ifdef UNICODE_ENABLE
+    set_unicode_input_mode(UC_WIN);
 #endif
 
     // Убеждаемся что мы начинаем с базового слоя
