@@ -26,8 +26,8 @@ static void send_unicode_code(uint32_t code) {
     // Всегда формируем 4 цифры (например, 0124 для символа |)
     snprintf(digits, sizeof(digits), "%04lu", (unsigned long)code);
 
-    register_code(KC_RALT);
-    wait_ms(10);
+    register_code(KC_LALT);  // Left Alt вместо Right Alt
+    wait_ms(50);             // Увеличенная задержка
 
     for (int i = 0; i < 4; i++) {
         switch (digits[i]) {
@@ -42,11 +42,11 @@ static void send_unicode_code(uint32_t code) {
             case '8': tap_code(KC_P8); break;  // Numpad 8
             case '9': tap_code(KC_P9); break;  // Numpad 9
         }
-        wait_ms(10);  // Задержка между цифрами
+        wait_ms(50);  // Увеличенная задержка между цифрами
     }
 
-    wait_ms(10);
-    unregister_code(KC_RALT);
+    wait_ms(100);  // Большая задержка перед отпусканием Alt
+    unregister_code(KC_LALT);
 }
 
 // Таблица символов: ASCII -> Windows Alt+Unicode (4-значные коды, десятичные)
