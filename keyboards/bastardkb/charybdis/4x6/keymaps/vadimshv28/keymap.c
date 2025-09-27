@@ -158,7 +158,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 void rgb_matrix_update_pwm_buffers(void);
 #endif
 
-void shutdown_user(void) {
+bool shutdown_user(bool jump_to_bootloader) {
 #ifdef RGBLIGHT_ENABLE
     rgblight_enable_noeeprom();
     rgblight_mode_noeeprom(1);
@@ -168,4 +168,5 @@ void shutdown_user(void) {
     rgb_matrix_set_color_all(RGB_RED);
     rgb_matrix_update_pwm_buffers();
 #endif // RGB_MATRIX_ENABLE
+    return false;
 }
