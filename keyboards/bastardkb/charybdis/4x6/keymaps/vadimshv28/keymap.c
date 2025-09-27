@@ -29,6 +29,15 @@ enum charybdis_keymap_layers {
     LAYER_CARET,
 };
 
+enum custom_keycodes {
+    RU_LSFT = SAFE_RANGE,
+    RU_RSFT,
+    EN_RSFT,
+    EN_LSFT,
+    ALT_GUI,
+    SCROLL_CARET,
+};
+
 /** \brief Automatically enable sniping-mode on the pointer layer. */
 #define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_CARET
 
