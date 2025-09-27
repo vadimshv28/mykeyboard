@@ -20,6 +20,26 @@
 #ifdef UNICODE_ENABLE
 #include "process_unicode.h"
 
+// Хелпер: отправка Alt-кода через NumPad
+static void send_alt_code(const char *digits) {
+    register_code(KC_LALT);
+    for (const char *p = digits; *p; p++) {
+        switch (*p) {
+            case '0': tap_code16(KC_KP_0); break;
+            case '1': tap_code16(KC_KP_1); break;
+            case '2': tap_code16(KC_KP_2); break;
+            case '3': tap_code16(KC_KP_3); break;
+            case '4': tap_code16(KC_KP_4); break;
+            case '5': tap_code16(KC_KP_5); break;
+            case '6': tap_code16(KC_KP_6); break;
+            case '7': tap_code16(KC_KP_7); break;
+            case '8': tap_code16(KC_KP_8); break;
+            case '9': tap_code16(KC_KP_9); break;
+        }
+    }
+    unregister_code(KC_LALT);
+}
+
 // Хелпер для отправки Unicode через встроенный QMK механизм
 static void send_unicode_symbol(uint32_t unicode_code) {
     register_unicode(unicode_code);  // Простая встроенная функция QMK
@@ -60,6 +80,16 @@ static const uint32_t symbol_map[256] = {
     ['`'] = 0x0060,  // Unicode ` (обратная кавычка)
     ['~'] = 0x007E,  // Unicode ~ (тильда)
     [0xE2] = 0x2116, // Unicode № (символ номера)
+};
+
+// Таблица Alt-кодов для Windows (только для символов, где важно)
+static const char *alt_code_map[256] = {
+    ['|'] = "124",   // Вертикальная черта
+    ['<'] = "060",   // Меньше
+    ['>'] = "062",   // Больше
+    ['@'] = "064",   // Собака
+    ['#'] = "035",   // Решётка
+    // при желании можно расширять
 };
 #endif
 
@@ -271,8 +301,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,   KC_P1,   KC_P2,   KC_P3, XXXXXXX, XXXXXXX,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                  XXXXXXX, XXXXXXX, QK_BOOT,    KC_CAPS, KC_P0,
-                                            _______, EE_CLR,    XXXXXXX
+                                  XXXXXXX, XXXXXXX, QK_BOOT,    KC_CAPS, XXXXXXX,
+                                            _______, EE_CLR,    KC_P0
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
@@ -382,8 +412,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (keycode >= SYMBOL_KEY_BASE && keycode <= SYMBOL_KEY_BASE + 255) {
         if (record->event.pressed) {
             uint8_t symbol = keycode - SYMBOL_KEY_BASE;
-            // Проверяем, есть ли символ в таблице, и отправляем его Unicode код
-            if (symbol_map[symbol] != 0) {
+            // Сначала проверяем Alt-коды (приоритет для проблемных символов)
+            if (alt_code_map[symbol]) {
+                send_alt_code(alt_code_map[symbol]);
+            } else if (symbol_map[symbol] != 0) {
                 send_unicode_symbol(symbol_map[symbol]);
             }
         }
