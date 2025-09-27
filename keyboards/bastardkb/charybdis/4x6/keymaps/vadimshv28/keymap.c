@@ -71,7 +71,7 @@ static bool     scroll_caret_symbol_mode    = false;
 // Адаптивный DPI трекбола
 #define DPI_MIN 150
 #define DPI_MAX 450
-#define DPI_SCROLL 100
+#define DPI_SCROLL 50
 #define DPI_CARET 200
 #define SPEED_THRESHOLD_SLOW 1
 #define SPEED_THRESHOLD_FAST 2
@@ -211,7 +211,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,   KC_P1,   KC_P2,   KC_P3, XXXXXXX, XXXXXXX,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                  XXXXXXX, XXXXXXX, QK_BOOT,    XXXXXXX, KC_P0,
+                                  XXXXXXX, XXXXXXX, QK_BOOT,    KC_CAPS, KC_P0,
                                             _______, EE_CLR,    XXXXXXX
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
