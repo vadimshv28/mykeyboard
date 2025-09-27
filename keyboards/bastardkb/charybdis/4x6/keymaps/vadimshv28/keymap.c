@@ -91,9 +91,12 @@ static void set_pointer_mode(pointer_mode_t mode) {
     }
     
     // Устанавливаем соответствующий DPI для каждого режима
+#ifdef POINTING_DEVICE_ENABLE
     switch (mode) {
         case POINTER_MODE_MOUSE:
             // В режиме мыши DPI будет управляться адаптивно
+            current_dpi = DPI_MIN;
+            pointing_device_set_cpi(current_dpi);
             break;
         case POINTER_MODE_SCROLL:
             current_dpi = DPI_SCROLL;
@@ -104,9 +107,11 @@ static void set_pointer_mode(pointer_mode_t mode) {
             pointing_device_set_cpi(current_dpi);
             break;
     }
+#endif
 }
 
 static void update_dpi_adaptive(int16_t x, int16_t y) {
+#ifdef POINTING_DEVICE_ENABLE
     // Вычисляем скорость движения (максимум из x и y)
     uint16_t speed = MAX(abs(x), abs(y));
     uint16_t target_dpi;
@@ -125,6 +130,7 @@ static void update_dpi_adaptive(int16_t x, int16_t y) {
         current_dpi = target_dpi;
         pointing_device_set_cpi(current_dpi);
     }
+#endif
 }
 
 #define LOWER MO(LAYER_SCROLL)
