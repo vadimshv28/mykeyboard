@@ -23,7 +23,7 @@
 #define NO_ACTION_ONESHOT
 
 /* Unicode configuration. */
-#define UNICODE_SELECTED_INPUT_MODE UC_WINC
+#define UNICODE_SELECTED_INPUT_MODE UC_WIN
 
 /* Charybdis-specific features. */
 

@@ -20,11 +20,32 @@
 #ifdef UNICODE_ENABLE
 #include "process_unicode.h"
 
-// Хелпер для отправки Unicode
+// Хелпер для отправки Unicode (Windows Alt+код)
 static void send_unicode_code(uint32_t code) {
-    unicode_input_start();
-    register_hex(code);
-    unicode_input_finish();
+    register_code(KC_RALT);
+    
+    // Отправляем цифры Unicode кода
+    if (code >= 1000) {
+        register_code(KC_P1 + (code / 1000) - 1);
+        unregister_code(KC_P1 + (code / 1000) - 1);
+        code %= 1000;
+    }
+    if (code >= 100) {
+        register_code(KC_P1 + (code / 100) - 1);
+        unregister_code(KC_P1 + (code / 100) - 1);
+        code %= 100;
+    }
+    if (code >= 10) {
+        register_code(KC_P1 + (code / 10) - 1);
+        unregister_code(KC_P1 + (code / 10) - 1);
+        code %= 10;
+    }
+    if (code > 0) {
+        register_code(KC_P1 + code - 1);
+        unregister_code(KC_P1 + code - 1);
+    }
+    
+    unregister_code(KC_RALT);
 }
 #endif
 
