@@ -22,7 +22,7 @@
 
 // Хелпер для отправки Unicode (Windows Alt+код) - компактная версия с snprintf
 static void send_unicode_code(uint32_t code) {
-    char digits[6];
+    char digits[12]; // Увеличенный буфер для больших чисел
     // Всегда формируем 4 цифры (например, 0124 для символа |)
     snprintf(digits, sizeof(digits), "%04lu", (unsigned long)code);
 
