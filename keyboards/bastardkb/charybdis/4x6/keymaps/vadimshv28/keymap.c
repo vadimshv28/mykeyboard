@@ -20,26 +20,33 @@
 #ifdef UNICODE_ENABLE
 #include "process_unicode.h"
 
-// Хелпер для отправки Unicode (Windows Alt+код)
+// Хелпер для отправки Unicode (Windows Alt+код) - упрощенная версия
 static void send_unicode_code(uint32_t code) {
     register_code(KC_LALT);
-    wait_ms(10);
-
-    // Отправляем цифры через обычные цифровые клавиши (не numpad)
-    char digits[6];
-    int len = snprintf(digits, sizeof(digits), "%lu", (unsigned long)code);
     
-    for (int i = 0; i < len; i++) {
-        uint8_t digit = digits[i] - '0';
-        if (digit == 0) {
-            tap_code(KC_0);
-        } else {
-            tap_code(KC_1 + digit - 1);
-        }
-        wait_ms(10);
+    // Простая отправка цифр без snprintf
+    if (code >= 1000) {
+        uint8_t thousands = code / 1000;
+        tap_code(KC_1 + thousands - 1);
+        code %= 1000;
     }
-
-    wait_ms(10);
+    if (code >= 100) {
+        uint8_t hundreds = code / 100;
+        tap_code(KC_1 + hundreds - 1);
+        code %= 100;
+    }
+    if (code >= 10) {
+        uint8_t tens = code / 10;
+        tap_code(KC_1 + tens - 1);
+        code %= 10;
+    }
+    // Последняя цифра (всегда нужна)
+    if (code == 0) {
+        tap_code(KC_0);
+    } else {
+        tap_code(KC_1 + code - 1);
+    }
+    
     unregister_code(KC_LALT);
 }
 #endif
