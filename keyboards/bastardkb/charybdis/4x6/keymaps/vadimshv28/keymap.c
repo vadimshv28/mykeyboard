@@ -31,18 +31,18 @@ static void send_unicode_code(uint32_t code) {
 
     for (int i = 0; i < 4; i++) {
         switch (digits[i]) {
-            case '0': tap_code(KC_P0); break;
-            case '1': tap_code(KC_P1); break;
-            case '2': tap_code(KC_P2); break;
-            case '3': tap_code(KC_P3); break;
-            case '4': tap_code(KC_P4); break;
-            case '5': tap_code(KC_P5); break;
-            case '6': tap_code(KC_P6); break;
-            case '7': tap_code(KC_P7); break;
-            case '8': tap_code(KC_P8); break;
-            case '9': tap_code(KC_P9); break;
+            case '0': tap_code(KC_0); break;  // Обычная цифра 0
+            case '1': tap_code(KC_1); break;  // Обычная цифра 1
+            case '2': tap_code(KC_2); break;  // Обычная цифра 2
+            case '3': tap_code(KC_3); break;  // Обычная цифра 3
+            case '4': tap_code(KC_4); break;  // Обычная цифра 4
+            case '5': tap_code(KC_5); break;  // Обычная цифра 5
+            case '6': tap_code(KC_6); break;  // Обычная цифра 6
+            case '7': tap_code(KC_7); break;  // Обычная цифра 7
+            case '8': tap_code(KC_8); break;  // Обычная цифра 8
+            case '9': tap_code(KC_9); break;  // Обычная цифра 9
         }
-        wait_ms(5);
+        wait_ms(10);  // Увеличил задержку между цифрами
     }
 
     wait_ms(10);
@@ -57,7 +57,6 @@ static const uint32_t symbol_map[256] = {
     ['='] = 61,    // Alt+0061 =
     ['*'] = 42,    // Alt+0042 *
     ['('] = 40,    // Alt+0040 (
-    [')'] = 41,    // Alt+0041 )
     ['<'] = 60,    // Alt+0060 <
     ['>'] = 62,    // Alt+0062 >
     ['#'] = 35,    // Alt+0035 #
@@ -70,6 +69,7 @@ static const uint32_t symbol_map[256] = {
     [']'] = 93,    // Alt+0093 ]
     [','] = 44,    // Alt+0044 ,
     ['.'] = 46,    // Alt+0046 .
+{{ ... }}
     ['\"'] = 34,   // Alt+0034 "
     ['\''] = 39,   // Alt+0039 '
     ['$'] = 36,    // Alt+0036 $
