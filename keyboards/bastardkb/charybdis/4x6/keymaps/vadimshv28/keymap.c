@@ -31,18 +31,18 @@ static void send_unicode_code(uint32_t code) {
 
     for (int i = 0; i < 4; i++) {
         switch (digits[i]) {
-            case '0': tap_code(KC_0); break;  // Обычная цифра 0
-            case '1': tap_code(KC_1); break;  // Обычная цифра 1
-            case '2': tap_code(KC_2); break;  // Обычная цифра 2
-            case '3': tap_code(KC_3); break;  // Обычная цифра 3
-            case '4': tap_code(KC_4); break;  // Обычная цифра 4
-            case '5': tap_code(KC_5); break;  // Обычная цифра 5
-            case '6': tap_code(KC_6); break;  // Обычная цифра 6
-            case '7': tap_code(KC_7); break;  // Обычная цифра 7
-            case '8': tap_code(KC_8); break;  // Обычная цифра 8
-            case '9': tap_code(KC_9); break;  // Обычная цифра 9
+            case '0': tap_code(KC_P0); break;  // Numpad 0 (ОБЯЗАТЕЛЬНО для Alt+кодов!)
+            case '1': tap_code(KC_P1); break;  // Numpad 1
+            case '2': tap_code(KC_P2); break;  // Numpad 2
+            case '3': tap_code(KC_P3); break;  // Numpad 3
+            case '4': tap_code(KC_P4); break;  // Numpad 4
+            case '5': tap_code(KC_P5); break;  // Numpad 5
+            case '6': tap_code(KC_P6); break;  // Numpad 6
+            case '7': tap_code(KC_P7); break;  // Numpad 7
+            case '8': tap_code(KC_P8); break;  // Numpad 8
+            case '9': tap_code(KC_P9); break;  // Numpad 9
         }
-        wait_ms(10);  // Увеличил задержку между цифрами
+        wait_ms(10);  // Задержка между цифрами
     }
 
     wait_ms(10);
