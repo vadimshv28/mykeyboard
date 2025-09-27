@@ -339,19 +339,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
             uint8_t symbol = keycode - SYMBOL_KEY_BASE;
 
-            // Отправляем символы через Unicode для полной независимости от раскладки
+            // ВСЕ символы через Unicode для полной независимости от раскладки
             switch (symbol) {
-                case ':':  // U+003A COLON
-                    send_unicode_hex_string("003A");
+                // Строка 1: @ ; / = * ( ) < > # _
+                case '@':  // U+0040 COMMERCIAL AT
+                    send_unicode_hex_string("0040");
                     break;
-                case ';':  // U+003B SEMICOLON  
+                case ';':  // U+003B SEMICOLON
                     send_unicode_hex_string("003B");
                     break;
                 case '/':  // U+002F SOLIDUS
                     send_unicode_hex_string("002F");
                     break;
-                case '?':  // U+003F QUESTION MARK
-                    send_unicode_hex_string("003F");
+                case '=':  // U+003D EQUALS SIGN
+                    send_unicode_hex_string("003D");
+                    break;
+                case '*':  // U+002A ASTERISK
+                    send_unicode_hex_string("002A");
+                    break;
+                case '(':  // U+0028 LEFT PARENTHESIS
+                    send_unicode_hex_string("0028");
+                    break;
+                case ')':  // U+0029 RIGHT PARENTHESIS
+                    send_unicode_hex_string("0029");
                     break;
                 case '<':  // U+003C LESS-THAN SIGN
                     send_unicode_hex_string("003C");
@@ -359,17 +369,40 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 case '>':  // U+003E GREATER-THAN SIGN
                     send_unicode_hex_string("003E");
                     break;
+                case '#':  // U+0023 NUMBER SIGN
+                    send_unicode_hex_string("0023");
+                    break;
+                case '_':  // U+005F LOW LINE
+                    send_unicode_hex_string("005F");
+                    break;
+                
+                // Строка 2: № : | % + [ ] , . " '
+                case 0xE2:  // Многобайтовый символ № (U+2116)
+                    send_unicode_hex_string("2116");
+                    break;
+                case ':':  // U+003A COLON
+                    send_unicode_hex_string("003A");
+                    break;
+                case '|':  // U+007C VERTICAL LINE
+                    send_unicode_hex_string("007C");
+                    break;
+                case '%':  // U+0025 PERCENT SIGN
+                    send_unicode_hex_string("0025");
+                    break;
+                case '+':  // U+002B PLUS SIGN
+                    send_unicode_hex_string("002B");
+                    break;
+                case '[':  // U+005B LEFT SQUARE BRACKET
+                    send_unicode_hex_string("005B");
+                    break;
+                case ']':  // U+005D RIGHT SQUARE BRACKET
+                    send_unicode_hex_string("005D");
+                    break;
                 case ',':  // U+002C COMMA
                     send_unicode_hex_string("002C");
                     break;
                 case '.':  // U+002E FULL STOP
                     send_unicode_hex_string("002E");
-                    break;
-                case '|':  // U+007C VERTICAL LINE
-                    send_unicode_hex_string("007C");
-                    break;
-                case '\\': // U+005C REVERSE SOLIDUS
-                    send_unicode_hex_string("005C");
                     break;
                 case '\"': // U+0022 QUOTATION MARK
                     send_unicode_hex_string("0022");
@@ -377,9 +410,42 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 case '\'': // U+0027 APOSTROPHE
                     send_unicode_hex_string("0027");
                     break;
-                case 0xE2:  // Многобайтовый символ № (U+2116)
-                    send_unicode_hex_string("2116");
+                
+                // Строка 3: $ & \ ^ - { } ? ! ` ~
+                case '$':  // U+0024 DOLLAR SIGN
+                    send_unicode_hex_string("0024");
                     break;
+                case '&':  // U+0026 AMPERSAND
+                    send_unicode_hex_string("0026");
+                    break;
+                case '\\': // U+005C REVERSE SOLIDUS
+                    send_unicode_hex_string("005C");
+                    break;
+                case '^':  // U+005E CIRCUMFLEX ACCENT
+                    send_unicode_hex_string("005E");
+                    break;
+                case '-':  // U+002D HYPHEN-MINUS
+                    send_unicode_hex_string("002D");
+                    break;
+                case '{':  // U+007B LEFT CURLY BRACKET
+                    send_unicode_hex_string("007B");
+                    break;
+                case '}':  // U+007D RIGHT CURLY BRACKET
+                    send_unicode_hex_string("007D");
+                    break;
+                case '?':  // U+003F QUESTION MARK
+                    send_unicode_hex_string("003F");
+                    break;
+                case '!':  // U+0021 EXCLAMATION MARK
+                    send_unicode_hex_string("0021");
+                    break;
+                case '`':  // U+0060 GRAVE ACCENT
+                    send_unicode_hex_string("0060");
+                    break;
+                case '~':  // U+007E TILDE
+                    send_unicode_hex_string("007E");
+                    break;
+                
                 default:
                     // Для остальных ASCII символов используем прямой Unicode код
                     {
