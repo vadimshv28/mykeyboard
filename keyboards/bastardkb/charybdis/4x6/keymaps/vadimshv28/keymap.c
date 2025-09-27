@@ -630,9 +630,9 @@ void keyboard_post_init_user(void) {
     current_dpi = DPI_MIN;
 #endif
 
-    // Настраиваем Unicode input для Windows
+    // Настраиваем Unicode для Windows (ЕДИНСТВЕННЫЙ способ независимости от раскладки!)
 #ifdef UNICODE_ENABLE
-    set_unicode_input_mode(0);  // 0 = Windows mode
+    unicode_config.input_mode = UNICODE_MODE_WINDOWS;  // Windows Unicode mode
 #endif
 
     // Убеждаемся что мы начинаем с базового слоя
