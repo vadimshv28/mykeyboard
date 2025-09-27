@@ -631,9 +631,9 @@ void keyboard_post_init_user(void) {
     current_dpi = DPI_MIN;
 #endif
 
-    // Настраиваем Unicode input для Windows (можно изменить на UC_LNX для Linux, UC_MAC для macOS)
+    // Настраиваем Unicode input для Windows 
 #ifdef UNICODE_ENABLE
-    set_unicode_input_mode(UC_WIN);
+    set_unicode_input_mode(0);  // 0 = Windows mode
 #endif
 
     // Убеждаемся что мы начинаем с базового слоя
