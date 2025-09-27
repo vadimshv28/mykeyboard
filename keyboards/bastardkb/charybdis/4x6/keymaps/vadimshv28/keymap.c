@@ -369,46 +369,46 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
             uint8_t symbol = keycode - SYMBOL_KEY_BASE;
 
-            // ВСЕ символы через send_unicode_code() - ЕДИНСТВЕННЫЙ способ независимости от раскладки ОС!
+            // ВСЕ символы через send_unicode_code() - Windows Alt+коды (CP437/Windows-1252)!
             switch (symbol) {
                 // Строка 1: @ ; / = * ( ) < > # _
-                case '@': send_unicode_code(0x0040); break;  // U+0040 COMMERCIAL AT
-                case ';': send_unicode_code(0x003B); break;  // U+003B SEMICOLON
-                case '/': send_unicode_code(0x002F); break;  // U+002F SOLIDUS
-                case '=': send_unicode_code(0x003D); break;  // U+003D EQUALS SIGN
-                case '*': send_unicode_code(0x002A); break;  // U+002A ASTERISK
-                case '(': send_unicode_code(0x0028); break;  // U+0028 LEFT PARENTHESIS
-                case ')': send_unicode_code(0x0029); break;  // U+0029 RIGHT PARENTHESIS
-                case '<': send_unicode_code(0x003C); break;  // U+003C LESS-THAN SIGN
-                case '>': send_unicode_code(0x003E); break;  // U+003E GREATER-THAN SIGN
-                case '#': send_unicode_code(0x0023); break;  // U+0023 NUMBER SIGN
-                case '_': send_unicode_code(0x005F); break;  // U+005F LOW LINE
+                case '@': send_unicode_code(64); break;   // Alt+64 @
+                case ';': send_unicode_code(59); break;   // Alt+59 ;
+                case '/': send_unicode_code(47); break;   // Alt+47 /
+                case '=': send_unicode_code(61); break;   // Alt+61 =
+                case '*': send_unicode_code(42); break;   // Alt+42 *
+                case '(': send_unicode_code(40); break;   // Alt+40 (
+                case ')': send_unicode_code(41); break;   // Alt+41 )
+                case '<': send_unicode_code(60); break;   // Alt+60 <
+                case '>': send_unicode_code(62); break;   // Alt+62 >
+                case '#': send_unicode_code(35); break;   // Alt+35 #
+                case '_': send_unicode_code(95); break;   // Alt+95 _
 
                 // Строка 2: № : | % + [ ] , . " '
-                case 0xE2: send_unicode_code(0x2116); break; // № U+2116 NUMERO SIGN
-                case ':': send_unicode_code(0x003A); break;  // U+003A COLON
-                case '|': send_unicode_code(0x007C); break;  // U+007C VERTICAL LINE
-                case '%': send_unicode_code(0x0025); break;  // U+0025 PERCENT SIGN
-                case '+': send_unicode_code(0x002B); break;  // U+002B PLUS SIGN
-                case '[': send_unicode_code(0x005B); break;  // U+005B LEFT SQUARE BRACKET
-                case ']': send_unicode_code(0x005D); break;  // U+005D RIGHT SQUARE BRACKET
-                case ',': send_unicode_code(0x002C); break;  // U+002C COMMA
-                case '.': send_unicode_code(0x002E); break;  // U+002E FULL STOP
-                case '\"': send_unicode_code(0x0022); break; // U+0022 QUOTATION MARK
-                case '\'': send_unicode_code(0x0027); break; // U+0027 APOSTROPHE
+                case 0xE2: send_unicode_code(8470); break; // Alt+8470 №
+                case ':': send_unicode_code(58); break;    // Alt+58 :
+                case '|': send_unicode_code(124); break;   // Alt+124 |
+                case '%': send_unicode_code(37); break;    // Alt+37 %
+                case '+': send_unicode_code(43); break;    // Alt+43 +
+                case '[': send_unicode_code(91); break;    // Alt+91 [
+                case ']': send_unicode_code(93); break;    // Alt+93 ]
+                case ',': send_unicode_code(44); break;    // Alt+44 ,
+                case '.': send_unicode_code(46); break;    // Alt+46 .
+                case '\"': send_unicode_code(34); break;  // Alt+34 "
+                case '\'': send_unicode_code(39); break;  // Alt+39 '
 
                 // Строка 3: $ & \ ^ - { } ? ! ` ~
-                case '$': send_unicode_code(0x0024); break;  // U+0024 DOLLAR SIGN
-                case '&': send_unicode_code(0x0026); break;  // U+0026 AMPERSAND
-                case '\\': send_unicode_code(0x005C); break; // U+005C REVERSE SOLIDUS
-                case '^': send_unicode_code(0x005E); break;  // U+005E CIRCUMFLEX ACCENT
-                case '-': send_unicode_code(0x002D); break;  // U+002D HYPHEN-MINUS
-                case '{': send_unicode_code(0x007B); break;  // U+007B LEFT CURLY BRACKET
-                case '}': send_unicode_code(0x007D); break;  // U+007D RIGHT CURLY BRACKET
-                case '?': send_unicode_code(0x003F); break;  // U+003F QUESTION MARK
-                case '!': send_unicode_code(0x0021); break;  // U+0021 EXCLAMATION MARK
-                case '`': send_unicode_code(0x0060); break;  // U+0060 GRAVE ACCENT
-                case '~': send_unicode_code(0x007E); break;  // U+007E TILDE
+                case '$': send_unicode_code(36); break;   // Alt+36 $
+                case '&': send_unicode_code(38); break;   // Alt+38 &
+                case '\\': send_unicode_code(92); break;  // Alt+92 \
+                case '^': send_unicode_code(94); break;   // Alt+94 ^
+                case '-': send_unicode_code(45); break;   // Alt+45 -
+                case '{': send_unicode_code(123); break;  // Alt+123 {
+                case '}': send_unicode_code(125); break;  // Alt+125 }
+                case '?': send_unicode_code(63); break;   // Alt+63 ?
+                case '!': send_unicode_code(33); break;   // Alt+33 !
+                case '`': send_unicode_code(96); break;   // Alt+96 `
+                case '~': send_unicode_code(126); break;  // Alt+126 ~
             }
         }
         return false;
