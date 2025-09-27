@@ -233,7 +233,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_TAB,  SS("@"), SS(";"), SS("/"), SS("="), SS("*"), SS("("), SS(")"), SS("<"), SS(">"), SS("#"), SS("_"),
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_LSFT, SS("№"), KC_SCLN, SS("|"), SS("%"), SS("+"), SS("["), SS("]"), SS(","), SS("."), SS("\""), SS("'"),
+       KC_LSFT, SS("№"), SS(":"), SS("|"), SS("%"), SS("+"), SS("["), SS("]"), SS(","), SS("."), SS("\""), SS("'"),
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_LCTL, SS("$"), SS("&"), SS("\\"), SS("^"), SS("-"), SS("{"), SS("}"), SS("?"), SS("!"), SS("`"), SS("~"),
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
@@ -327,26 +327,31 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 scroll_caret_last_release = timer_read();
             }
             return false;
-            
-        case KC_SCLN:
-            // На слое LAYER_CARET отправляем двоеточие независимо от раскладки ОС
-            if (record->event.pressed && IS_LAYER_ON(LAYER_CARET)) {
-                send_string(":");
-                return false;
-            }
-            return true;
     }
     
     // Обработка символьных кейкодов
     if (keycode >= SYMBOL_KEY_BASE && keycode <= SYMBOL_KEY_BASE + 255) {
         if (record->event.pressed) {
             uint8_t symbol = keycode - SYMBOL_KEY_BASE;
-            char str[2] = {(char)symbol, '\0'};
-            // Специальные случаи для многобайтовых символов
-            if (symbol == 0xE2) {
-                send_string("№");
-            } else {
-                send_string(str);
+            
+            // Специальные случаи для символов, которые конфликтуют с русской раскладкой
+            switch (symbol) {
+                case ':':  // ASCII 58 - двоеточие
+                    send_unicode_string(":");
+                    break;
+                case ';':  // ASCII 59 - точка с запятой
+                    send_unicode_string(";");
+                    break;
+                case 0xE2:  // Многобайтовый символ №
+                    send_string("№");
+                    break;
+                default:
+                    // Для остальных символов используем обычную отправку
+                    {
+                        char str[2] = {(char)symbol, '\0'};
+                        send_string(str);
+                    }
+                    break;
             }
         }
         return false;
