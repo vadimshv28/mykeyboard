@@ -23,8 +23,9 @@
 #define NO_ACTION_ONESHOT
 
 /* Unicode configuration. */
-#define UNICODE_SELECTED_MODES UNICODE_MODE_WINCOMPOSE
 #define UNICODE_SELECTED_INPUT_MODE UC_WINC  // WinAPI прямой ввод
+#define UNICODE_SELECTED_MODES UNICODE_MODE_WINCOMPOSE  // Поддержка WinCompose режима
+#define UNICODE_KEY_WINC KC_RALT  // Правый Alt для Windows Unicode
 
 /* Charybdis-specific features. */
 
