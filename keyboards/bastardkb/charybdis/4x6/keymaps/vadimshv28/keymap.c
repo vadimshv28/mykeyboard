@@ -447,11 +447,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 case '~':  // U+007E TILDE
                     send_unicode(0x007E);
                     break;
-
-                default:
-                    // Для остальных ASCII символов используем send_unicode
-                    send_unicode((uint32_t)symbol);
-                    break;
             }
         }
         return false;
