@@ -344,109 +344,43 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             // ВСЕ символы через send_unicode() - ЕДИНСТВЕННЫЙ способ независимости от раскладки ОС!
             switch (symbol) {
                 // Строка 1: @ ; / = * ( ) < > # _
-                case '@':  // U+0040 COMMERCIAL AT
-                    send_unicode(0x0040);
-                    break;
-                case ';':  // U+003B SEMICOLON
-                    send_unicode(0x003B);
-                    break;
-                case '/':  // U+002F SOLIDUS
-                    send_unicode(0x002F);
-                    break;
-                case '=':  // U+003D EQUALS SIGN
-                    send_unicode(0x003D);
-                    break;
-                case '*':  // U+002A ASTERISK
-                    send_unicode(0x002A);
-                    break;
-                case '(':  // U+0028 LEFT PARENTHESIS
-                    send_unicode(0x0028);
-                    break;
-                case ')':  // U+0029 RIGHT PARENTHESIS
-                    send_unicode(0x0029);
-                    break;
-                case '<':  // U+003C LESS-THAN SIGN
-                    send_unicode(0x003C);
-                    break;
-                case '>':  // U+003E GREATER-THAN SIGN
-                    send_unicode(0x003E);
-                    break;
-                case '#':  // U+0023 NUMBER SIGN
-                    send_unicode(0x0023);
-                    break;
-                case '_':  // U+005F LOW LINE
-                    send_unicode(0x005F);
-                    break;
+                case '@': send_unicode(0x0040); break;  // U+0040 COMMERCIAL AT
+                case ';': send_unicode(0x003B); break;  // U+003B SEMICOLON
+                case '/': send_unicode(0x002F); break;  // U+002F SOLIDUS
+                case '=': send_unicode(0x003D); break;  // U+003D EQUALS SIGN
+                case '*': send_unicode(0x002A); break;  // U+002A ASTERISK
+                case '(': send_unicode(0x0028); break;  // U+0028 LEFT PARENTHESIS
+                case ')': send_unicode(0x0029); break;  // U+0029 RIGHT PARENTHESIS
+                case '<': send_unicode(0x003C); break;  // U+003C LESS-THAN SIGN
+                case '>': send_unicode(0x003E); break;  // U+003E GREATER-THAN SIGN
+                case '#': send_unicode(0x0023); break;  // U+0023 NUMBER SIGN
+                case '_': send_unicode(0x005F); break;  // U+005F LOW LINE
 
                 // Строка 2: № : | % + [ ] , . " '
-                case 0xE2:  // № - специальный символ, через Unicode
-                    send_unicode(0x2116);
-                    break;
-                case ':':  // U+003A COLON
-                    send_unicode(0x003A);
-                    break;
-                case '|':  // U+007C VERTICAL LINE
-                    send_unicode(0x007C);
-                    break;
-                case '%':  // U+0025 PERCENT SIGN
-                    send_unicode(0x0025);
-                    break;
-                case '+':  // U+002B PLUS SIGN
-                    send_unicode(0x002B);
-                    break;
-                case '[':  // U+005B LEFT SQUARE BRACKET
-                    send_unicode(0x005B);
-                    break;
-                case ']':  // U+005D RIGHT SQUARE BRACKET
-                    send_unicode(0x005D);
-                    break;
-                case ',':  // U+002C COMMA
-                    send_unicode(0x002C);
-                    break;
-                case '.':  // U+002E FULL STOP
-                    send_unicode(0x002E);
-                    break;
-                case '\"': // U+0022 QUOTATION MARK
-                    send_unicode(0x0022);
-                    break;
-                case '\'': // U+0027 APOSTROPHE
-                    send_unicode(0x0027);
-                    break;
+                case 0xE2: send_unicode(0x2116); break; // № U+2116 NUMERO SIGN
+                case ':': send_unicode(0x003A); break;  // U+003A COLON
+                case '|': send_unicode(0x007C); break;  // U+007C VERTICAL LINE
+                case '%': send_unicode(0x0025); break;  // U+0025 PERCENT SIGN
+                case '+': send_unicode(0x002B); break;  // U+002B PLUS SIGN
+                case '[': send_unicode(0x005B); break;  // U+005B LEFT SQUARE BRACKET
+                case ']': send_unicode(0x005D); break;  // U+005D RIGHT SQUARE BRACKET
+                case ',': send_unicode(0x002C); break;  // U+002C COMMA
+                case '.': send_unicode(0x002E); break;  // U+002E FULL STOP
+                case '\"': send_unicode(0x0022); break; // U+0022 QUOTATION MARK
+                case '\'': send_unicode(0x0027); break; // U+0027 APOSTROPHE
 
                 // Строка 3: $ & \ ^ - { } ? ! ` ~
-                case '$':  // U+0024 DOLLAR SIGN
-                    send_unicode(0x0024);
-                    break;
-                case '&':  // U+0026 AMPERSAND
-                    send_unicode(0x0026);
-                    break;
-                case '\\': // U+005C REVERSE SOLIDUS
-                    send_unicode(0x005C);
-                    break;
-                case '^':  // U+005E CIRCUMFLEX ACCENT
-                    send_unicode(0x005E);
-                    break;
-                case '-':  // U+002D HYPHEN-MINUS
-                    send_unicode(0x002D);
-                    break;
-                case '{':  // U+007B LEFT CURLY BRACKET
-                    send_unicode(0x007B);
-                    break;
-                case '}':  // U+007D RIGHT CURLY BRACKET
-                    send_unicode(0x007D);
-                    break;
-                case '?':  // U+003F QUESTION MARK
-                    send_unicode(0x003F);
-                    break;
-                case '!':  // U+0021 EXCLAMATION MARK
-                    send_unicode(0x0021);
-                    break;
-                case '`':  // U+0060 GRAVE ACCENT
-                    send_unicode(0x0060);
-                    break;
-                case '~':  // U+007E TILDE
-                    send_unicode(0x007E);
-                    break;
+                case '$': send_unicode(0x0024); break;  // U+0024 DOLLAR SIGN
+                case '&': send_unicode(0x0026); break;  // U+0026 AMPERSAND
+                case '\\': send_unicode(0x005C); break; // U+005C REVERSE SOLIDUS
+                case '^': send_unicode(0x005E); break;  // U+005E CIRCUMFLEX ACCENT
+                case '-': send_unicode(0x002D); break;  // U+002D HYPHEN-MINUS
+                case '{': send_unicode(0x007B); break;  // U+007B LEFT CURLY BRACKET
+                case '}': send_unicode(0x007D); break;  // U+007D RIGHT CURLY BRACKET
+                case '?': send_unicode(0x003F); break;  // U+003F QUESTION MARK
+                case '!': send_unicode(0x0021); break;  // U+0021 EXCLAMATION MARK
+                case '`': send_unicode(0x0060); break;  // U+0060 GRAVE ACCENT
+                case '~': send_unicode(0x007E); break;  // U+007E TILDE
             }
         }
         return false;
