@@ -385,7 +385,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 case ':':  // : = Shift + ;
                     tap_code16(S(KC_SCLN));
                     break;
-                case '|':  // | = Shift + \
+                case '|':  // | = Shift + backslash
                     tap_code16(S(KC_BSLS));
                     break;
                 case '%':  // % = Shift + 5
@@ -420,7 +420,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 case '&':  // & = Shift + 7
                     tap_code16(S(KC_7));
                     break;
-                case '\\': // \ = \
+                case '\\': // backslash = backslash
                     tap_code(KC_BSLS);
                     break;
                 case '^':  // ^ = Shift + 6
