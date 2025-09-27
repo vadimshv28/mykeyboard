@@ -27,7 +27,7 @@ static void send_unicode_code(uint32_t code) {
 
     // Отправляем цифры через обычные цифровые клавиши (не numpad)
     char digits[6];
-    int len = snprintf(digits, sizeof(digits), "%u", code);
+    int len = snprintf(digits, sizeof(digits), "%lu", (unsigned long)code);
     
     for (int i = 0; i < len; i++) {
         uint8_t digit = digits[i] - '0';
