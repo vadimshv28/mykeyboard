@@ -20,37 +20,70 @@
 #ifdef UNICODE_ENABLE
 #include "process_unicode.h"
 
-// Хелпер для отправки Unicode (Windows Alt+код) - работающая версия
+// Хелпер для отправки Unicode (Windows Alt+код) - компактная версия с snprintf
 static void send_unicode_code(uint32_t code) {
+    char digits[6];
+    // Всегда формируем 4 цифры (например, 0124 для символа |)
+    snprintf(digits, sizeof(digits), "%04lu", (unsigned long)code);
+
     register_code(KC_RALT);
     wait_ms(10);
-    
-    // Отправляем цифры через numpad (как в оригинале)
-    if (code >= 1000) {
-        register_code(KC_P1 + (code / 1000) - 1);
-        unregister_code(KC_P1 + (code / 1000) - 1);
-        code %= 1000;
+
+    for (int i = 0; i < 4; i++) {
+        switch (digits[i]) {
+            case '0': tap_code(KC_P0); break;
+            case '1': tap_code(KC_P1); break;
+            case '2': tap_code(KC_P2); break;
+            case '3': tap_code(KC_P3); break;
+            case '4': tap_code(KC_P4); break;
+            case '5': tap_code(KC_P5); break;
+            case '6': tap_code(KC_P6); break;
+            case '7': tap_code(KC_P7); break;
+            case '8': tap_code(KC_P8); break;
+            case '9': tap_code(KC_P9); break;
+        }
+        wait_ms(5);
     }
-    if (code >= 100) {
-        register_code(KC_P1 + (code / 100) - 1);
-        unregister_code(KC_P1 + (code / 100) - 1);
-        code %= 100;
-    }
-    if (code >= 10) {
-        register_code(KC_P1 + (code / 10) - 1);
-        unregister_code(KC_P1 + (code / 10) - 1);
-        code %= 10;
-    }
-    if (code > 0) {
-        register_code(KC_P1 + code - 1);
-        unregister_code(KC_P1 + code - 1);
-    } else if (code == 0) {
-        register_code(KC_P0);
-        unregister_code(KC_P0);
-    }
-    
+
     wait_ms(10);
     unregister_code(KC_RALT);
+}
+
+// Таблица символов: ASCII -> Windows Alt-код (CP437/Windows-1252)
+static const uint32_t symbol_map[256] = {
+    ['@'] = 64,    // Alt+64 @
+    [';'] = 59,    // Alt+59 ;
+    ['/'] = 47,    // Alt+47 /
+    ['='] = 61,    // Alt+61 =
+    ['*'] = 42,    // Alt+42 *
+    ['('] = 40,    // Alt+40 (
+    [')'] = 41,    // Alt+41 )
+    ['<'] = 60,    // Alt+60 <
+    ['>'] = 62,    // Alt+62 >
+    ['#'] = 35,    // Alt+35 #
+    ['_'] = 95,    // Alt+95 _
+    [':'] = 58,    // Alt+58 :
+    ['|'] = 124,   // Alt+124 |
+    ['%'] = 37,    // Alt+37 %
+    ['+'] = 43,    // Alt+43 +
+    ['['] = 91,    // Alt+91 [
+    [']'] = 93,    // Alt+93 ]
+    [','] = 44,    // Alt+44 ,
+    ['.'] = 46,    // Alt+46 .
+    ['\"'] = 34,   // Alt+34 "
+    ['\''] = 39,   // Alt+39 '
+    ['$'] = 36,    // Alt+36 $
+    ['&'] = 38,    // Alt+38 &
+    ['\\'] = 92,   // Alt+92 \ 
+    ['^'] = 94,    // Alt+94 ^
+    ['-'] = 45,    // Alt+45 -
+    ['{'] = 123,   // Alt+123 {
+    ['}'] = 125,   // Alt+125 }
+    ['?'] = 63,    // Alt+63 ?
+    ['!'] = 33,    // Alt+33 !
+    ['`'] = 96,    // Alt+96 `
+    ['~'] = 126,   // Alt+126 ~
+    [0xE2] = 8470, // Alt+8470 № (специальный символ)
 }
 #endif
 
@@ -369,54 +402,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
     }
 
-    // Обработка символьных кейкодов
+    // Обработка символьных кейкодов через таблицу
     if (keycode >= SYMBOL_KEY_BASE && keycode <= SYMBOL_KEY_BASE + 255) {
         if (record->event.pressed) {
             uint8_t symbol = keycode - SYMBOL_KEY_BASE;
-
-            // ВСЕ символы через send_unicode_code() - Windows Alt+коды (CP437/Windows-1252)!
-            switch (symbol) {
-                // Строка 1: @ ; / = * ( ) < > # _
-                case '@': send_unicode_code(64); break;   // Alt+64 @
-                case ';': send_unicode_code(59); break;   // Alt+59 ;
-                case '/': send_unicode_code(47); break;   // Alt+47 /
-                case '=': send_unicode_code(61); break;   // Alt+61 =
-                case '*': send_unicode_code(42); break;   // Alt+42 *
-                case '(': send_unicode_code(40); break;   // Alt+40 (
-                case ')': send_unicode_code(41); break;   // Alt+41 )
-                case '<': send_unicode_code(60); break;   // Alt+60 <
-                case '>': send_unicode_code(62); break;   // Alt+62 >
-                case '#': send_unicode_code(35); break;   // Alt+35 #
-                case '_': send_unicode_code(95); break;   // Alt+95 _
-
-                // Строка 2: № : | % + [ ] , . " '
-                case 0xE2: send_unicode_code(8470); break; // Alt+8470 №
-                case ':': send_unicode_code(58); break;    // Alt+58 :
-                case '|': send_unicode_code(124); break;   // Alt+124 |
-                case '%': send_unicode_code(37); break;    // Alt+37 %
-                case '+': send_unicode_code(43); break;    // Alt+43 +
-                case '[': send_unicode_code(91); break;    // Alt+91 [
-                case ']': send_unicode_code(93); break;    // Alt+93 ]
-                case ',': send_unicode_code(44); break;    // Alt+44 ,
-                case '.': send_unicode_code(46); break;    // Alt+46 .
-                case '\"': send_unicode_code(34); break;  // Alt+34 "
-                case '\'': send_unicode_code(39); break;  // Alt+39 '
-
-                // Строка 3: $ & \ ^ - { } ? ! ` ~
-                case '$': send_unicode_code(36); break;   // Alt+36 $
-                case '&': send_unicode_code(38); break;   // Alt+38 &
-                case '\\': send_unicode_code(92); break;  // Alt+92
-                case '^': send_unicode_code(94); break;   // Alt+94 ^
-                case '-': send_unicode_code(45); break;   // Alt+45 -
-                case '{': send_unicode_code(123); break;  // Alt+123 {
-                case '}': send_unicode_code(125); break;  // Alt+125 }
-                case '?': send_unicode_code(63); break;   // Alt+63 ?
-                case '!': send_unicode_code(33); break;   // Alt+33 !
-                case '`': send_unicode_code(96); break;   // Alt+96 `
-                case '~': send_unicode_code(126); break;  // Alt+126 ~
+            // Проверяем, есть ли символ в таблице, и отправляем его Alt-код
+            if (symbol_map[symbol] != 0) {
+                send_unicode_code(symbol_map[symbol]);
             }
         }
-        return false;
+        return false; // Не передавать дальше
     }
 
     return true;
