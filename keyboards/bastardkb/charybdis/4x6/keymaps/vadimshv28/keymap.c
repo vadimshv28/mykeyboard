@@ -71,7 +71,7 @@ static bool     scroll_caret_symbol_mode    = false;
 // Адаптивный DPI трекбола
 #define DPI_MIN 150
 #define DPI_MAX 450
-#define DPI_SCROLL 10
+#define DPI_SCROLL 2
 #define DPI_CARET 200
 #define SPEED_THRESHOLD_SLOW 1
 #define SPEED_THRESHOLD_FAST 2
@@ -82,7 +82,6 @@ static uint16_t current_dpi = DPI_MIN;
 #define SS(str_literal) (SYMBOL_KEY_BASE | ((uint16_t)((str_literal)[0])))
 
 #define CARET_MODE_STEP 20
-#define SCROLL_DIVISOR 8
 
 static void set_pointer_mode(pointer_mode_t mode) {
     pointer_mode = mode;
@@ -357,10 +356,10 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
             return mouse_report;
             
         case POINTER_MODE_SCROLL:
-            // Режим прокрутки - движения превращаем в прокрутку с дополнительным замедлением
-            // Делим на SCROLL_DIVISOR для дополнительного замедления поверх DPI_SCROLL
-            mouse_report.h = mouse_report.x / SCROLL_DIVISOR;
-            mouse_report.v = -mouse_report.y / SCROLL_DIVISOR;
+            // Режим прокрутки - движения превращаем в прокрутку
+            // Замедление происходит через DPI_SCROLL=2
+            mouse_report.h = mouse_report.x;
+            mouse_report.v = -mouse_report.y;
             mouse_report.x = 0;
             mouse_report.y = 0;
             return mouse_report;
