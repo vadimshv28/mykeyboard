@@ -89,7 +89,7 @@ static void set_pointer_mode(pointer_mode_t mode) {
         caret_mode_x = 0;
         caret_mode_y = 0;
     }
-    
+
     // Устанавливаем соответствующий DPI для каждого режима
 #ifdef POINTING_DEVICE_ENABLE
     switch (mode) {
@@ -116,11 +116,11 @@ static void update_dpi_adaptive(int16_t x, int16_t y) {
     if (pointer_mode != POINTER_MODE_MOUSE) {
         return;
     }
-    
+
     // Вычисляем скорость движения (максимум из x и y)
     uint16_t speed = MAX(abs(x), abs(y));
     uint16_t target_dpi;
-    
+
     if (speed <= SPEED_THRESHOLD_SLOW) {
         target_dpi = DPI_MIN;
     } else if (speed >= SPEED_THRESHOLD_FAST) {
@@ -129,7 +129,7 @@ static void update_dpi_adaptive(int16_t x, int16_t y) {
         // Плавная интерполяция между MIN и MAX
         target_dpi = DPI_MIN + ((DPI_MAX - DPI_MIN) * (speed - SPEED_THRESHOLD_SLOW)) / (SPEED_THRESHOLD_FAST - SPEED_THRESHOLD_SLOW);
     }
-    
+
     // Обновляем DPI только если он изменился
     if (current_dpi != target_dpi) {
         current_dpi = target_dpi;
@@ -328,25 +328,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
     }
-    
+
     // Обработка символьных кейкодов
     if (keycode >= SYMBOL_KEY_BASE && keycode <= SYMBOL_KEY_BASE + 255) {
         if (record->event.pressed) {
             uint8_t symbol = keycode - SYMBOL_KEY_BASE;
-            
-            // Специальные случаи для многобайтовых символов
+
+            // Все символы отправляем через SEND_STRING для независимости от раскладки
             if (symbol == 0xE2) {
                 // Многобайтовый символ №
-                send_string("№");
+                SEND_STRING("№");
             } else {
-                // Все ASCII символы отправляем через Unicode для независимости от раскладки
+                // Все ASCII символы через SEND_STRING
                 char str[2] = {(char)symbol, '\0'};
-                send_unicode_string(str);
+                SEND_STRING(str);
             }
         }
         return false;
     }
-    
+
     return true;
 }
 
@@ -357,7 +357,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
             // Адаптивный DPI в базовых слоях
             update_dpi_adaptive(mouse_report.x, mouse_report.y);
             return mouse_report;
-            
+
         case POINTER_MODE_SCROLL:
             // Режим прокрутки - движения превращаем в прокрутку
             // Замедление происходит через DPI_SCROLL=2
@@ -366,7 +366,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
             mouse_report.x = 0;
             mouse_report.y = 0;
             return mouse_report;
-            
+
         case POINTER_MODE_CARET:
             // Режим каретки - движения превращаем в стрелки
             caret_mode_x += mouse_report.x;
@@ -397,7 +397,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
             mouse_report.v = 0;
             return mouse_report;
     }
-    
+
     return mouse_report;
 }
 #endif // POINTING_DEVICE_ENABLE
@@ -467,7 +467,7 @@ bool rgb_matrix_indicators_user(void) {
         rgb_matrix_sethsv_noeeprom(43, 255, 76);
         return false;
     }
-    
+
     // Определяем цвета для разных слоёв
     switch (get_highest_layer(layer_state)) {
         case LAYER_BASE_RU:
@@ -495,11 +495,11 @@ bool rgb_matrix_indicators_user(void) {
             rgb_matrix_sethsv_noeeprom(170, 255, 76);
             break;
         default:
-            // По умолчанию - белый (30% яркость) 
+            // По умолчанию - белый (30% яркость)
             rgb_matrix_sethsv_noeeprom(0, 0, 76);
             break;
     }
-    
+
     return false;
 }
 #endif // RGB_MATRIX_ENABLE
@@ -507,23 +507,23 @@ bool rgb_matrix_indicators_user(void) {
 void keyboard_post_init_user(void) {
     // Инициализируем все переменные
     ru_rsft_timer = 0;
-    alt_last_release = 0; 
+    alt_last_release = 0;
     alt_gui_mode = false;
     scroll_caret_last_release = 0;
     scroll_caret_symbol_mode = false;
     caret_mode_x = 0;
     caret_mode_y = 0;
     pointer_mode = POINTER_MODE_MOUSE;
-    
+
     // Устанавливаем начальный DPI
 #ifdef POINTING_DEVICE_ENABLE
     pointing_device_set_cpi(DPI_MIN);
     current_dpi = DPI_MIN;
 #endif
-    
+
     // Убеждаемся что мы начинаем с базового слоя
     layer_move(LAYER_BASE_RU);
-    
+
 #ifdef RGB_MATRIX_ENABLE
     // Включаем RGB матрицу
     rgb_matrix_enable();
