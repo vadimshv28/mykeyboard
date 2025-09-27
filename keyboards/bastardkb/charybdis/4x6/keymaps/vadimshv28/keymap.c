@@ -633,7 +633,7 @@ void keyboard_post_init_user(void) {
 
     // Настраиваем Unicode input для Windows (можно изменить на UC_LNX для Linux, UC_MAC для macOS)
 #ifdef UNICODE_ENABLE
-    set_unicode_input_mode(UC_WINC);
+    set_unicode_input_mode(UC_WIN);
 #endif
 
     // Убеждаемся что мы начинаем с базового слоя
