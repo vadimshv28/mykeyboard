@@ -21,7 +21,9 @@
 #include "process_unicode.h"
 #endif
 
-// Не определяем RGB коды напрямую, используем HSV_AUTO_POINTER_LAYER_TRIGGER_ENABLE
+// Не определяем RGB коды напрямую, используем HSV
+
+#ifdef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 #    include "timer.h"
 #endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
@@ -343,116 +345,112 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             switch (symbol) {
                 // Строка 1: @ ; / = * ( ) < > # _
                 case '@':  // U+0040 COMMERCIAL AT
-                    send_unicode_hex_string("0040");
+                    register_unicode(0x0040);
                     break;
                 case ';':  // U+003B SEMICOLON
-                    send_unicode_hex_string("003B");
+                    register_unicode(0x003B);
                     break;
                 case '/':  // U+002F SOLIDUS
-                    send_unicode_hex_string("002F");
+                    register_unicode(0x002F);
                     break;
                 case '=':  // U+003D EQUALS SIGN
-                    send_unicode_hex_string("003D");
+                    register_unicode(0x003D);
                     break;
                 case '*':  // U+002A ASTERISK
-                    send_unicode_hex_string("002A");
+                    register_unicode(0x002A);
                     break;
                 case '(':  // U+0028 LEFT PARENTHESIS
-                    send_unicode_hex_string("0028");
+                    register_unicode(0x0028);
                     break;
                 case ')':  // U+0029 RIGHT PARENTHESIS
-                    send_unicode_hex_string("0029");
+                    register_unicode(0x0029);
                     break;
                 case '<':  // U+003C LESS-THAN SIGN
-                    send_unicode_hex_string("003C");
+                    register_unicode(0x003C);
                     break;
                 case '>':  // U+003E GREATER-THAN SIGN
-                    send_unicode_hex_string("003E");
+                    register_unicode(0x003E);
                     break;
                 case '#':  // U+0023 NUMBER SIGN
-                    send_unicode_hex_string("0023");
+                    register_unicode(0x0023);
                     break;
                 case '_':  // U+005F LOW LINE
-                    send_unicode_hex_string("005F");
+                    register_unicode(0x005F);
                     break;
                 
                 // Строка 2: № : | % + [ ] , . " '
                 case 0xE2:  // Многобайтовый символ № (U+2116)
-                    send_unicode_hex_string("2116");
+                    register_unicode(0x2116);
                     break;
                 case ':':  // U+003A COLON
-                    send_unicode_hex_string("003A");
+                    register_unicode(0x003A);
                     break;
                 case '|':  // U+007C VERTICAL LINE
-                    send_unicode_hex_string("007C");
+                    register_unicode(0x007C);
                     break;
                 case '%':  // U+0025 PERCENT SIGN
-                    send_unicode_hex_string("0025");
+                    register_unicode(0x0025);
                     break;
                 case '+':  // U+002B PLUS SIGN
-                    send_unicode_hex_string("002B");
+                    register_unicode(0x002B);
                     break;
                 case '[':  // U+005B LEFT SQUARE BRACKET
-                    send_unicode_hex_string("005B");
+                    register_unicode(0x005B);
                     break;
                 case ']':  // U+005D RIGHT SQUARE BRACKET
-                    send_unicode_hex_string("005D");
+                    register_unicode(0x005D);
                     break;
                 case ',':  // U+002C COMMA
-                    send_unicode_hex_string("002C");
+                    register_unicode(0x002C);
                     break;
                 case '.':  // U+002E FULL STOP
-                    send_unicode_hex_string("002E");
+                    register_unicode(0x002E);
                     break;
                 case '\"': // U+0022 QUOTATION MARK
-                    send_unicode_hex_string("0022");
+                    register_unicode(0x0022);
                     break;
                 case '\'': // U+0027 APOSTROPHE
-                    send_unicode_hex_string("0027");
+                    register_unicode(0x0027);
                     break;
                 
                 // Строка 3: $ & \ ^ - { } ? ! ` ~
                 case '$':  // U+0024 DOLLAR SIGN
-                    send_unicode_hex_string("0024");
+                    register_unicode(0x0024);
                     break;
                 case '&':  // U+0026 AMPERSAND
-                    send_unicode_hex_string("0026");
+                    register_unicode(0x0026);
                     break;
                 case '\\': // U+005C REVERSE SOLIDUS
-                    send_unicode_hex_string("005C");
+                    register_unicode(0x005C);
                     break;
                 case '^':  // U+005E CIRCUMFLEX ACCENT
-                    send_unicode_hex_string("005E");
+                    register_unicode(0x005E);
                     break;
                 case '-':  // U+002D HYPHEN-MINUS
-                    send_unicode_hex_string("002D");
+                    register_unicode(0x002D);
                     break;
                 case '{':  // U+007B LEFT CURLY BRACKET
-                    send_unicode_hex_string("007B");
+                    register_unicode(0x007B);
                     break;
                 case '}':  // U+007D RIGHT CURLY BRACKET
-                    send_unicode_hex_string("007D");
+                    register_unicode(0x007D);
                     break;
                 case '?':  // U+003F QUESTION MARK
-                    send_unicode_hex_string("003F");
+                    register_unicode(0x003F);
                     break;
                 case '!':  // U+0021 EXCLAMATION MARK
-                    send_unicode_hex_string("0021");
+                    register_unicode(0x0021);
                     break;
                 case '`':  // U+0060 GRAVE ACCENT
-                    send_unicode_hex_string("0060");
+                    register_unicode(0x0060);
                     break;
                 case '~':  // U+007E TILDE
-                    send_unicode_hex_string("007E");
+                    register_unicode(0x007E);
                     break;
                 
                 default:
                     // Для остальных ASCII символов используем прямой Unicode код
-                    {
-                        char hex_str[5];
-                        snprintf(hex_str, sizeof(hex_str), "%04X", symbol);
-                        send_unicode_hex_string(hex_str);
-                    }
+                    register_unicode((uint32_t)symbol);
                     break;
             }
         }
@@ -635,7 +633,7 @@ void keyboard_post_init_user(void) {
 
     // Настраиваем Unicode input для Windows (можно изменить на UC_LNX для Linux, UC_MAC для macOS)
 #ifdef UNICODE_ENABLE
-    set_unicode_input_mode(UC_WIN);
+    set_unicode_input_mode(UC_WINC);
 #endif
 
     // Убеждаемся что мы начинаем с базового слоя
