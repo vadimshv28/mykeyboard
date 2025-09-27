@@ -22,30 +22,25 @@
 
 // Хелпер для отправки Unicode (Windows Alt+код)
 static void send_unicode_code(uint32_t code) {
-    register_code(KC_RALT);
+    register_code(KC_LALT);
+    wait_ms(10);
+
+    // Отправляем цифры через обычные цифровые клавиши (не numpad)
+    char digits[6];
+    int len = snprintf(digits, sizeof(digits), "%u", code);
     
-    // Отправляем цифры Unicode кода
-    if (code >= 1000) {
-        register_code(KC_P1 + (code / 1000) - 1);
-        unregister_code(KC_P1 + (code / 1000) - 1);
-        code %= 1000;
+    for (int i = 0; i < len; i++) {
+        uint8_t digit = digits[i] - '0';
+        if (digit == 0) {
+            tap_code(KC_0);
+        } else {
+            tap_code(KC_1 + digit - 1);
+        }
+        wait_ms(10);
     }
-    if (code >= 100) {
-        register_code(KC_P1 + (code / 100) - 1);
-        unregister_code(KC_P1 + (code / 100) - 1);
-        code %= 100;
-    }
-    if (code >= 10) {
-        register_code(KC_P1 + (code / 10) - 1);
-        unregister_code(KC_P1 + (code / 10) - 1);
-        code %= 10;
-    }
-    if (code > 0) {
-        register_code(KC_P1 + code - 1);
-        unregister_code(KC_P1 + code - 1);
-    }
-    
-    unregister_code(KC_RALT);
+
+    wait_ms(10);
+    unregister_code(KC_LALT);
 }
 #endif
 
@@ -400,7 +395,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 // Строка 3: $ & \ ^ - { } ? ! ` ~
                 case '$': send_unicode_code(36); break;   // Alt+36 $
                 case '&': send_unicode_code(38); break;   // Alt+38 &
-                case '\\': send_unicode_code(92); break;  // Alt+92 \
+                case '\\': send_unicode_code(92); break;  // Alt+92
                 case '^': send_unicode_code(94); break;   // Alt+94 ^
                 case '-': send_unicode_code(45); break;   // Alt+45 -
                 case '{': send_unicode_code(123); break;  // Alt+123 {
