@@ -484,14 +484,8 @@ bool rgb_matrix_indicators_user(void) {
             rgb_matrix_sethsv_noeeprom(191, 255, 102);
             break;
         case LAYER_SCROLL:
-            // Слой прокрутки - показываем режим указателя
-            if (pointer_mode == POINTER_MODE_SCROLL) {
-                // Если в режиме скролла - красный (DPI должен быть 10)
-                rgb_matrix_sethsv_noeeprom(0, 255, 76);
-            } else {
-                // Если НЕ в режиме скролла - зелёный 
-                rgb_matrix_sethsv_noeeprom(85, 255, 76);
-            }
+            // Слой прокрутки - зелёный (30% яркость)
+            rgb_matrix_sethsv_noeeprom(85, 255, 76);
             break;
         case LAYER_CARET:
             // Слой каретки - синий (30% яркость)
