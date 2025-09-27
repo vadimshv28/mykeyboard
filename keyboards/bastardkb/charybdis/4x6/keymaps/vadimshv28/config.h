@@ -23,7 +23,8 @@
 #define NO_ACTION_ONESHOT
 
 /* Unicode configuration. */
-#define UNICODE_SELECTED_INPUT_MODE UC_WIN
+#define UNICODE_SELECTED_MODES UNICODE_MODE_WINCOMPOSE
+#define UNICODE_SELECTED_INPUT_MODE UC_WINC  // WinAPI прямой ввод
 
 /* Charybdis-specific features. */
 

@@ -20,65 +20,46 @@
 #ifdef UNICODE_ENABLE
 #include "process_unicode.h"
 
-// Хелпер для отправки Unicode (Windows Alt+код) - строковая версия
-static void send_unicode_code_str(const char *digits) {
-    register_code(KC_LALT);  // Left Alt
-    wait_ms(10);
-
-    for (int i = 0; digits[i]; i++) {  // Идем до конца строки
-        switch (digits[i]) {
-            case '0': tap_code(KC_P0); break;  // Numpad 0 (ОБЯЗАТЕЛЬНО для Alt+кодов!)
-            case '1': tap_code(KC_P1); break;  // Numpad 1
-            case '2': tap_code(KC_P2); break;  // Numpad 2
-            case '3': tap_code(KC_P3); break;  // Numpad 3
-            case '4': tap_code(KC_P4); break;  // Numpad 4
-            case '5': tap_code(KC_P5); break;  // Numpad 5
-            case '6': tap_code(KC_P6); break;  // Numpad 6
-            case '7': tap_code(KC_P7); break;  // Numpad 7
-            case '8': tap_code(KC_P8); break;  // Numpad 8
-            case '9': tap_code(KC_P9); break;  // Numpad 9
-        }
-        wait_ms(10);  // Задержка между цифрами
-    }
-
-    wait_ms(10);  // Задержка перед отпусканием Alt
-    unregister_code(KC_LALT);
+// Хелпер для отправки Unicode через встроенный QMK механизм
+static void send_unicode_symbol(uint32_t unicode_code) {
+    register_unicode(unicode_code);  // Простая встроенная функция QMK
 }
 
-// Таблица символов: ASCII -> Windows Alt+Unicode (4-значные коды, десятичные)
-static const char *symbol_map[256] = {
-    ['@'] = "0064",    // Alt+0064 @
-    [';'] = "0059",    // Alt+0059 ;
-    ['/'] = "0047",    // Alt+0047 /
-    ['='] = "0061",    // Alt+0061 =
-    ['*'] = "0042",    // Alt+0042 *
-    ['('] = "0040",    // Alt+0040 (
-    ['<'] = "0060",    // Alt+0060 <
-    ['>'] = "0062",    // Alt+0062 >
-    ['#'] = "0035",    // Alt+0035 #
-    ['_'] = "0095",    // Alt+0095 _
-    [':'] = "0058",    // Alt+0058 :
-    ['|'] = "0124",   // Alt+0124 |
-    ['%'] = "0037",    // Alt+0037 %
-    ['+'] = "0043",    // Alt+0043 +
-    ['['] = "0091",    // Alt+0091 [
-    [']'] = "0093",    // Alt+0093 ]
-    [','] = "0044",    // Alt+0044 ,
-    ['.'] = "0046",    // Alt+0046 .
-    ['\"'] = "0034",   // Alt+0034 "
-    ['\''] = "0039",   // Alt+0039 '
-    ['$'] = "0036",    // Alt+0036 $
-    ['&'] = "0038",    // Alt+0038 &
-    ['\\'] = "0092",   // Alt+0092 backslash
-    ['^'] = "0094",    // Alt+0094 ^
-    ['-'] = "0045",    // Alt+0045 -
-    ['{'] = "0123",   // Alt+0123 {
-    ['}'] = "0125",   // Alt+0125 }
-    ['?'] = "0063",    // Alt+0063 ?
-    ['!'] = "0033",    // Alt+0033 !
-    ['`'] = "0096",    // Alt+0096 `
-    ['~'] = "0126",   // Alt+0126 ~
-    [0xE2] = "8470", // Alt+8470 № (специальный символ)
+// Таблица символов: ASCII -> Unicode коды (для встроенного QMK Unicode)
+static const uint32_t symbol_map[256] = {
+    ['@'] = 0x0040,  // Unicode @ (коммерческое at)
+    [';'] = 0x003B,  // Unicode ; (точка с запятой)
+    ['/'] = 0x002F,  // Unicode / (косая черта)
+    ['='] = 0x003D,  // Unicode = (знак равенства)
+    ['*'] = 0x002A,  // Unicode * (звездочка)
+    ['('] = 0x0028,  // Unicode ( (левая скобка)
+    [')'] = 0x0029,  // Unicode ) (правая скобка)
+    ['<'] = 0x003C,  // Unicode < (меньше)
+    ['>'] = 0x003E,  // Unicode > (больше)
+    ['#'] = 0x0023,  // Unicode # (решетка)
+    ['_'] = 0x005F,  // Unicode _ (подчеркивание)
+    [':'] = 0x003A,  // Unicode : (двоеточие)
+    ['|'] = 0x007C,  // Unicode | (вертикальная черта)
+    ['%'] = 0x0025,  // Unicode % (процент)
+    ['+'] = 0x002B,  // Unicode + (плюс)
+    ['['] = 0x005B,  // Unicode [ (левая квадратная скобка)
+    [']'] = 0x005D,  // Unicode ] (правая квадратная скобка)
+    [','] = 0x002C,  // Unicode , (запятая)
+    ['.'] = 0x002E,  // Unicode . (точка)
+    ['\"'] = 0x0022, // Unicode " (кавычка)
+    ['\''] = 0x0027, // Unicode ' (апостроф)
+    ['$'] = 0x0024,  // Unicode $ (доллар)
+    ['&'] = 0x0026,  // Unicode & (амперсанд)
+    ['\\'] = 0x005C, // Unicode \ (обратная косая)
+    ['^'] = 0x005E,  // Unicode ^ (циркумфлекс)
+    ['-'] = 0x002D,  // Unicode - (дефис)
+    ['{'] = 0x007B,  // Unicode { (левая фигурная)
+    ['}'] = 0x007D,  // Unicode } (правая фигурная)
+    ['?'] = 0x003F,  // Unicode ? (вопрос)
+    ['!'] = 0x0021,  // Unicode ! (восклицание)
+    ['`'] = 0x0060,  // Unicode ` (обратная кавычка)
+    ['~'] = 0x007E,  // Unicode ~ (тильда)
+    [0xE2] = 0x2116, // Unicode № (символ номера)
 };
 #endif
 
@@ -401,9 +382,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (keycode >= SYMBOL_KEY_BASE && keycode <= SYMBOL_KEY_BASE + 255) {
         if (record->event.pressed) {
             uint8_t symbol = keycode - SYMBOL_KEY_BASE;
-            // Проверяем, есть ли символ в таблице, и отправляем его Alt-код
-            if (symbol_map[symbol] != NULL) {
-                send_unicode_code_str(symbol_map[symbol]);
+            // Проверяем, есть ли символ в таблице, и отправляем его Unicode код
+            if (symbol_map[symbol] != 0) {
+                send_unicode_symbol(symbol_map[symbol]);
             }
         }
         return false; // Не передавать дальше
