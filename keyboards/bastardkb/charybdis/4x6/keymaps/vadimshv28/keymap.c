@@ -38,6 +38,12 @@ enum custom_keycodes {
     SCROLL_CARET,
 };
 
+typedef enum {
+    POINTER_MODE_MOUSE = 0,
+    POINTER_MODE_SCROLL,
+    POINTER_MODE_CARET,
+} pointer_mode_t;
+
 /** \brief Automatically enable sniping-mode on the pointer layer. */
 #define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_CARET
 
@@ -52,6 +58,74 @@ static uint16_t auto_pointer_layer_timer = 0;
 #        define CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD 8
 #    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD
 #endif     // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
+
+static pointer_mode_t pointer_mode = POINTER_MODE_MOUSE;
+static int16_t caret_mode_x        = 0;
+static int16_t caret_mode_y        = 0;
+static uint16_t ru_rsft_timer     = 0;
+static uint16_t alt_last_release  = 0;
+static bool     alt_gui_mode      = false;
+static uint16_t scroll_caret_last_release   = 0;
+static bool     scroll_caret_symbol_mode    = false;
+
+// Адаптивный DPI трекбола
+#define DPI_MIN 150
+#define DPI_MAX 450
+#define DPI_SCROLL 100
+#define DPI_CARET 200
+#define SPEED_THRESHOLD_SLOW 1
+#define SPEED_THRESHOLD_FAST 2
+
+static uint16_t current_dpi = DPI_MIN;
+
+#define SYMBOL_KEY_BASE  QK_USER
+#define SS(str_literal) (SYMBOL_KEY_BASE | ((uint16_t)((str_literal)[0])))
+
+#define CARET_MODE_STEP 20
+
+static void set_pointer_mode(pointer_mode_t mode) {
+    pointer_mode = mode;
+    if (mode != POINTER_MODE_CARET) {
+        caret_mode_x = 0;
+        caret_mode_y = 0;
+    }
+    
+    // Устанавливаем соответствующий DPI для каждого режима
+    switch (mode) {
+        case POINTER_MODE_MOUSE:
+            // В режиме мыши DPI будет управляться адаптивно
+            break;
+        case POINTER_MODE_SCROLL:
+            current_dpi = DPI_SCROLL;
+            pointing_device_set_cpi(current_dpi);
+            break;
+        case POINTER_MODE_CARET:
+            current_dpi = DPI_CARET;
+            pointing_device_set_cpi(current_dpi);
+            break;
+    }
+}
+
+static void update_dpi_adaptive(int16_t x, int16_t y) {
+    // Вычисляем скорость движения (максимум из x и y)
+    uint16_t speed = MAX(abs(x), abs(y));
+    uint16_t target_dpi;
+    
+    if (speed <= SPEED_THRESHOLD_SLOW) {
+        target_dpi = DPI_MIN;
+    } else if (speed >= SPEED_THRESHOLD_FAST) {
+        target_dpi = DPI_MAX;
+    } else {
+        // Плавная интерполяция между MIN и MAX
+        target_dpi = DPI_MIN + ((DPI_MAX - DPI_MIN) * (speed - SPEED_THRESHOLD_SLOW)) / (SPEED_THRESHOLD_FAST - SPEED_THRESHOLD_SLOW);
+    }
+    
+    // Обновляем DPI только если он изменился
+    if (current_dpi != target_dpi) {
+        current_dpi = target_dpi;
+        pointing_device_set_cpi(current_dpi);
+    }
+}
 
 #define LOWER MO(LAYER_SCROLL)
 #define RAISE MO(LAYER_CARET)
