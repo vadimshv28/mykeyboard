@@ -428,9 +428,17 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
     switch (combo_index) {
         case COMBO_BASE_RU:
             layer_move(LAYER_BASE_RU);
+            // Отправляем Ctrl+2 при переходе на русский слой
+            register_code(KC_LCTL);
+            tap_code(KC_2);
+            unregister_code(KC_LCTL);
             break;
         case COMBO_BASE_EN:
             layer_move(LAYER_BASE_EN);
+            // Отправляем Ctrl+1 при переходе на английский слой
+            register_code(KC_LCTL);
+            tap_code(KC_1);
+            unregister_code(KC_LCTL);
             break;
     }
 }
@@ -441,20 +449,20 @@ bool rgb_matrix_indicators_user(void) {
     // Определяем цвета для разных слоёв
     switch (get_highest_layer(layer_state)) {
         case LAYER_BASE_RU:
-            // Русский слой - фиолетовый (30% яркость)
-            rgb_matrix_sethsv_noeeprom(191, 255, 76);
+            // Русский слой - белый (30% яркость)
+            rgb_matrix_sethsv_noeeprom(0, 0, 76);
             break;
         case LAYER_BASE_RU_SHIFT:
-            // Русский Shift - светло-фиолетовый (30% яркость)
-            rgb_matrix_sethsv_noeeprom(200, 200, 76);
+            // Русский Shift - белый (40% яркость)
+            rgb_matrix_sethsv_noeeprom(0, 0, 102);
             break;
         case LAYER_BASE_EN:
-            // Английский слой - синий (30% яркость)
-            rgb_matrix_sethsv_noeeprom(170, 255, 76);
+            // Английский слой - фиолетовый (30% яркость)
+            rgb_matrix_sethsv_noeeprom(191, 255, 76);
             break;
         case LAYER_BASE_EN_SHIFT:
-            // Английский Shift - светло-синий (30% яркость)
-            rgb_matrix_sethsv_noeeprom(160, 200, 76);
+            // Английский Shift - фиолетовый (40% яркость)
+            rgb_matrix_sethsv_noeeprom(191, 255, 102);
             break;
         case LAYER_SCROLL:
             // Слой прокрутки - зелёный (30% яркость)
@@ -465,8 +473,8 @@ bool rgb_matrix_indicators_user(void) {
             rgb_matrix_sethsv_noeeprom(43, 255, 76);
             break;
         default:
-            // По умолчанию - фиолетовый (30% яркость)
-            rgb_matrix_sethsv_noeeprom(191, 255, 76);
+            // По умолчанию - белый (30% яркость) 
+            rgb_matrix_sethsv_noeeprom(0, 0, 76);
             break;
     }
     
@@ -499,7 +507,7 @@ void keyboard_post_init_user(void) {
     rgb_matrix_enable();
     // Устанавливаем режим статического цвета
     rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-    // Устанавливаем начальный цвет (фиолетовый для базового слоя с яркостью 30%)
-    rgb_matrix_sethsv_noeeprom(191, 255, 76);
+    // Устанавливаем начальный цвет (белый для базового русского слоя с яркостью 30%)
+    rgb_matrix_sethsv_noeeprom(0, 0, 76);
 #endif // RGB_MATRIX_ENABLE
 }
