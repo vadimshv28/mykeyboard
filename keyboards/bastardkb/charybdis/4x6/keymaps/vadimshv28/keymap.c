@@ -356,9 +356,10 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
             return mouse_report;
             
         case POINTER_MODE_SCROLL:
-            // Режим прокрутки - движения превращаем в прокрутку
-            mouse_report.h = mouse_report.x;
-            mouse_report.v = -mouse_report.y;
+            // Режим прокрутки - движения превращаем в прокрутку с дополнительным замедлением
+            // Делим на 8 для дополнительного замедления поверх DPI=10
+            mouse_report.h = mouse_report.x / 8;
+            mouse_report.v = -mouse_report.y / 8;
             mouse_report.x = 0;
             mouse_report.y = 0;
             return mouse_report;
