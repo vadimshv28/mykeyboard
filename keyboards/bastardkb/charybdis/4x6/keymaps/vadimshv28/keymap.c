@@ -334,24 +334,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
             uint8_t symbol = keycode - SYMBOL_KEY_BASE;
             
-            // Специальные случаи для символов, которые конфликтуют с русской раскладкой
-            switch (symbol) {
-                case ':':  // ASCII 58 - двоеточие
-                    send_unicode_string(":");
-                    break;
-                case ';':  // ASCII 59 - точка с запятой
-                    send_unicode_string(";");
-                    break;
-                case 0xE2:  // Многобайтовый символ №
-                    send_string("№");
-                    break;
-                default:
-                    // Для остальных символов используем обычную отправку
-                    {
-                        char str[2] = {(char)symbol, '\0'};
-                        send_string(str);
-                    }
-                    break;
+            // Специальные случаи для многобайтовых символов
+            if (symbol == 0xE2) {
+                // Многобайтовый символ №
+                send_string("№");
+            } else {
+                // Все ASCII символы отправляем через Unicode для независимости от раскладки
+                char str[2] = {(char)symbol, '\0'};
+                send_unicode_string(str);
             }
         }
         return false;
