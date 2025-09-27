@@ -20,16 +20,12 @@
 #ifdef UNICODE_ENABLE
 #include "process_unicode.h"
 
-// Хелпер для отправки Unicode (Windows Alt+код) - компактная версия с snprintf
-static void send_unicode_code(uint32_t code) {
-    char digits[12]; // Увеличенный буфер для больших чисел
-    // Всегда формируем 4 цифры (например, 0124 для символа |)
-    snprintf(digits, sizeof(digits), "%04lu", (unsigned long)code);
+// Хелпер для отправки Unicode (Windows Alt+код) - строковая версия
+static void send_unicode_code_str(const char *digits) {
+    register_code(KC_LALT);  // Left Alt
+    wait_ms(10);
 
-    register_code(KC_LALT);  // Left Alt вместо Right Alt
-    wait_ms(50);             // Увеличенная задержка
-
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; digits[i]; i++) {  // Идем до конца строки
         switch (digits[i]) {
             case '0': tap_code(KC_P0); break;  // Numpad 0 (ОБЯЗАТЕЛЬНО для Alt+кодов!)
             case '1': tap_code(KC_P1); break;  // Numpad 1
@@ -42,47 +38,47 @@ static void send_unicode_code(uint32_t code) {
             case '8': tap_code(KC_P8); break;  // Numpad 8
             case '9': tap_code(KC_P9); break;  // Numpad 9
         }
-        wait_ms(50);  // Увеличенная задержка между цифрами
+        wait_ms(10);  // Задержка между цифрами
     }
 
-    wait_ms(100);  // Большая задержка перед отпусканием Alt
+    wait_ms(10);  // Задержка перед отпусканием Alt
     unregister_code(KC_LALT);
 }
 
 // Таблица символов: ASCII -> Windows Alt+Unicode (4-значные коды, десятичные)
-static const uint32_t symbol_map[256] = {
-    ['@'] = 64,    // Alt+0064 @
-    [';'] = 59,    // Alt+0059 ;
-    ['/'] = 47,    // Alt+0047 /
-    ['='] = 61,    // Alt+0061 =
-    ['*'] = 42,    // Alt+0042 *
-    ['('] = 40,    // Alt+0040 (
-    ['<'] = 60,    // Alt+0060 <
-    ['>'] = 62,    // Alt+0062 >
-    ['#'] = 35,    // Alt+0035 #
-    ['_'] = 95,    // Alt+0095 _
-    [':'] = 58,    // Alt+0058 :
-    ['|'] = 124,   // Alt+0124 |
-    ['%'] = 37,    // Alt+0037 %
-    ['+'] = 43,    // Alt+0043 +
-    ['['] = 91,    // Alt+0091 [
-    [']'] = 93,    // Alt+0093 ]
-    [','] = 44,    // Alt+0044 ,
-    ['.'] = 46,    // Alt+0046 .
-    ['\"'] = 34,   // Alt+0034 "
-    ['\''] = 39,   // Alt+0039 '
-    ['$'] = 36,    // Alt+0036 $
-    ['&'] = 38,    // Alt+0038 &
-    ['\\'] = 92,   // Alt+0092 backslash
-    ['^'] = 94,    // Alt+0094 ^
-    ['-'] = 45,    // Alt+0045 -
-    ['{'] = 123,   // Alt+0123 {
-    ['}'] = 125,   // Alt+0125 }
-    ['?'] = 63,    // Alt+0063 ?
-    ['!'] = 33,    // Alt+0033 !
-    ['`'] = 96,    // Alt+0096 `
-    ['~'] = 126,   // Alt+0126 ~
-    [0xE2] = 8470, // Alt+8470 № (специальный символ)
+static const char *symbol_map[256] = {
+    ['@'] = "0064",    // Alt+0064 @
+    [';'] = "0059",    // Alt+0059 ;
+    ['/'] = "0047",    // Alt+0047 /
+    ['='] = "0061",    // Alt+0061 =
+    ['*'] = "0042",    // Alt+0042 *
+    ['('] = "0040",    // Alt+0040 (
+    ['<'] = "0060",    // Alt+0060 <
+    ['>'] = "0062",    // Alt+0062 >
+    ['#'] = "0035",    // Alt+0035 #
+    ['_'] = "0095",    // Alt+0095 _
+    [':'] = "0058",    // Alt+0058 :
+    ['|'] = "0124",   // Alt+0124 |
+    ['%'] = "0037",    // Alt+0037 %
+    ['+'] = "0043",    // Alt+0043 +
+    ['['] = "0091",    // Alt+0091 [
+    [']'] = "0093",    // Alt+0093 ]
+    [','] = "0044",    // Alt+0044 ,
+    ['.'] = "0046",    // Alt+0046 .
+    ['\"'] = "0034",   // Alt+0034 "
+    ['\''] = "0039",   // Alt+0039 '
+    ['$'] = "0036",    // Alt+0036 $
+    ['&'] = "0038",    // Alt+0038 &
+    ['\\'] = "0092",   // Alt+0092 backslash
+    ['^'] = "0094",    // Alt+0094 ^
+    ['-'] = "0045",    // Alt+0045 -
+    ['{'] = "0123",   // Alt+0123 {
+    ['}'] = "0125",   // Alt+0125 }
+    ['?'] = "0063",    // Alt+0063 ?
+    ['!'] = "0033",    // Alt+0033 !
+    ['`'] = "0096",    // Alt+0096 `
+    ['~'] = "0126",   // Alt+0126 ~
+    [0xE2] = "8470", // Alt+8470 № (специальный символ)
 };
 #endif
 
@@ -406,8 +402,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
             uint8_t symbol = keycode - SYMBOL_KEY_BASE;
             // Проверяем, есть ли символ в таблице, и отправляем его Alt-код
-            if (symbol_map[symbol] != 0) {
-                send_unicode_code(symbol_map[symbol]);
+            if (symbol_map[symbol] != NULL) {
+                send_unicode_code_str(symbol_map[symbol]);
             }
         }
         return false; // Не передавать дальше
