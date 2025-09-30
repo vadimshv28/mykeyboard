@@ -1,2 +1,3 @@
 VIA_ENABLE = no
 COMBO_ENABLE = yes
+UNICODE_ENABLE = yes
