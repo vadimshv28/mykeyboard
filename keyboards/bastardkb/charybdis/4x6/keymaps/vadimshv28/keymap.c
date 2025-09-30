@@ -62,7 +62,8 @@ enum custom_keycodes {
     EN_RSFT,
     EN_LSFT,
     ALT_GUI,
-    SCROLL_CARET,
+    SCROLL,  // Momentary layer switch для скролла
+    CARET,   // Momentary layer switch для каретки
 };
 
 typedef enum {
@@ -92,8 +93,6 @@ static int16_t caret_mode_y        = 0;
 static uint16_t ru_rsft_timer     = 0;
 static uint16_t alt_last_release  = 0;
 static bool     alt_gui_mode      = false;
-static uint16_t scroll_caret_last_release   = 0;
-static bool     scroll_caret_symbol_mode    = false;
 
 // Адаптивный DPI трекбола
 #define DPI_MIN 150
@@ -193,8 +192,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, KC_RBRC, KC_GRV,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                 KC_BTN1, KC_SPC,   KC_BTN2,     KC_DEL,  KC_ENT,
-                                      SCROLL_CARET, ALT_GUI,    KC_BSPC
+                                 KC_BTN1, KC_SPC,   ALT_GUI,     KC_DEL,  KC_ENT,
+                                              SCROLL, CARET,     KC_BSPC
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
@@ -208,8 +207,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
         KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, KC_RBRC, KC_GRV,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                   KC_BTN1, KC_SPC, KC_BTN2,     KC_DEL,  KC_ENT,
-                                           XXXXXXX, ALT_GUI,    KC_BSPC
+                                   KC_BTN1, KC_SPC, ALT_GUI,     KC_DEL,  KC_ENT,
+                                           XXXXXXX, XXXXXXX,    KC_BSPC
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
@@ -223,8 +222,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,      KC_N,    KC_M, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                 KC_BTN1, KC_SPC,   KC_BTN2,     KC_DEL,  KC_ENT,
-                                      SCROLL_CARET, ALT_GUI,    KC_BSPC
+                                 KC_BTN1, KC_SPC,   ALT_GUI,     KC_DEL,  KC_ENT,
+                                              SCROLL, CARET,    KC_BSPC
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
@@ -238,7 +237,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
         KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                                 KC_BTN1, KC_SPC,   KC_BTN2,     KC_DEL,  KC_ENT,
+                                 KC_BTN1, KC_SPC,   ALT_GUI,     KC_DEL,  KC_ENT,
                                            XXXXXXX, ALT_GUI,    KC_BSPC
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
@@ -251,7 +250,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_LSFT, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, KC_F8,    XXXXXXX,   KC_P4,   KC_P5,   KC_P6, XXXXXXX, EE_CLR,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_LCTL, KC_F13, KC_F12, KC_F11, KC_F10, KC_F9,    XXXXXXX,   KC_P1,   KC_P2,   KC_P3, XXXXXXX, QK_BOOT,
+       KC_LCTL, KC_F13, KC_F12, KC_BTN3, KC_BTN2, KC_F9,    XXXXXXX,   KC_P1,   KC_P2,   KC_P3, XXXXXXX, QK_BOOT,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
                                   XXXXXXX, ALT_GUI, XXXXXXX,    KC_CAPS, XXXXXXX,
                                             _______, XXXXXXX,    KC_P0
@@ -338,27 +337,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 alt_last_release = timer_read();
             }
             return false;
-        case SCROLL_CARET:
+        case SCROLL:
             if (record->event.pressed) {
-                if (timer_elapsed(scroll_caret_last_release) < TAPPING_TERM) {
-                    // Двойное нажатие - переходим на LAYER_CARET
-                    scroll_caret_symbol_mode = true;
-                    layer_on(LAYER_CARET);
-                    set_pointer_mode(POINTER_MODE_CARET);
-                } else {
-                    // Одиночное удержание - переходим на LAYER_SCROLL
-                    scroll_caret_symbol_mode = false;
-                    layer_on(LAYER_SCROLL);
-                    set_pointer_mode(POINTER_MODE_SCROLL);
-                }
+                layer_on(LAYER_SCROLL);
+                set_pointer_mode(POINTER_MODE_SCROLL);
             } else {
-                if (scroll_caret_symbol_mode) {
-                    layer_off(LAYER_CARET);
-                } else {
-                    layer_off(LAYER_SCROLL);
-                }
+                layer_off(LAYER_SCROLL);
                 set_pointer_mode(POINTER_MODE_MOUSE);
-                scroll_caret_last_release = timer_read();
+            }
+            return false;
+            
+        case CARET:
+            if (record->event.pressed) {
+                layer_on(LAYER_CARET);
+                set_pointer_mode(POINTER_MODE_CARET);
+            } else {
+                layer_off(LAYER_CARET);
+                set_pointer_mode(POINTER_MODE_MOUSE);
             }
             return false;
     }
@@ -555,8 +550,6 @@ void keyboard_post_init_user(void) {
     ru_rsft_timer = 0;
     alt_last_release = 0;
     alt_gui_mode = false;
-    scroll_caret_last_release = 0;
-    scroll_caret_symbol_mode = false;
     caret_mode_x = 0;
     caret_mode_y = 0;
     pointer_mode = POINTER_MODE_MOUSE;
