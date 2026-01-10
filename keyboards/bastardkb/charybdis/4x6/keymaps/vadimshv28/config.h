@@ -35,6 +35,10 @@
 // - `CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD`
 // #define CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
-// Переопределяем DPI для drag-scroll режима для медленной прокрутки
-#define CHARYBDIS_DRAGSCROLL_DPI 20
+// Переопределяем DPI для drag-scroll режима для высокой точности
+#define CHARYBDIS_DRAGSCROLL_DPI 200
+// Инвертируем вертикальную прокрутку
+#define CHARYBDIS_DRAGSCROLL_REVERSE_Y
+// Увеличиваем буфер для более плавной и медленной прокрутки
+#define CHARYBDIS_DRAGSCROLL_BUFFER_SIZE 8
 #endif // POINTING_DEVICE_ENABLE
