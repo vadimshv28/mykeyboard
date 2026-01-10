@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
+#include "charybdis.h"
 #include <stdio.h>
 #include <math.h>
 #include <print.h>
@@ -68,7 +69,6 @@ enum custom_keycodes {
 
 typedef enum {
     POINTER_MODE_MOUSE = 0,
-    POINTER_MODE_SCROLL,
     POINTER_MODE_CARET,
 } pointer_mode_t;
 
@@ -95,9 +95,8 @@ static uint16_t alt_last_release  = 0;
 static bool     alt_gui_mode      = false;
 
 // Адаптивный DPI трекбола
-#define DPI_MIN 150
+#define DPI_MIN 450
 #define DPI_MAX 450
-#define DPI_SCROLL 100  // Было 2 - слишком низко! Минимальный реальный DPI для медленной прокрутки
 #define DPI_CARET 200
 #define SPEED_THRESHOLD_SLOW 1
 #define SPEED_THRESHOLD_FAST 2
@@ -126,10 +125,6 @@ static void set_pointer_mode(pointer_mode_t mode) {
         case POINTER_MODE_MOUSE:
             // В режиме мыши DPI будет управляться адаптивно
             current_dpi = DPI_MIN;
-            pointing_device_set_cpi(current_dpi);
-            break;
-        case POINTER_MODE_SCROLL:
-            current_dpi = DPI_SCROLL;
             pointing_device_set_cpi(current_dpi);
             break;
         case POINTER_MODE_CARET:
@@ -184,7 +179,7 @@ static void update_dpi_adaptive(int16_t x, int16_t y) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_BASE_RU] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-        KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,       KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BTN3,
+        KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,       KC_6,    KC_7,    KC_8,    KC_9,    KC_0, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
         KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_LBRC,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
@@ -199,7 +194,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [LAYER_BASE_RU_SHIFT] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-        KC_ESC,  XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX, KC_BTN3,
+        KC_ESC,  XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
         KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_LBRC,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
@@ -214,7 +209,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [LAYER_BASE_EN] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-        KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,      KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BTN3,
+        KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,      KC_6,    KC_7,    KC_8,    KC_9,    KC_0, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
         KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,      KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
@@ -229,7 +224,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [LAYER_BASE_EN_SHIFT] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-        KC_ESC,  XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX, KC_BTN3,
+        KC_ESC,  XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
         KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
@@ -340,13 +335,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case SCROLL:
             if (record->event.pressed) {
                 layer_on(LAYER_SCROLL);
-                set_pointer_mode(POINTER_MODE_SCROLL);
+                charybdis_set_pointer_dragscroll_enabled(true);
             } else {
                 layer_off(LAYER_SCROLL);
-                set_pointer_mode(POINTER_MODE_MOUSE);
+                charybdis_set_pointer_dragscroll_enabled(false);
             }
             return false;
-            
+
         case CARET:
             if (record->event.pressed) {
                 layer_on(LAYER_CARET);
@@ -397,15 +392,6 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
         case POINTER_MODE_MOUSE:
             // Адаптивный DPI в базовых слоях
             update_dpi_adaptive(mouse_report.x, mouse_report.y);
-            return mouse_report;
-
-        case POINTER_MODE_SCROLL:
-            // Режим прокрутки - движения превращаем в прокрутку
-            // Замедление происходит через DPI_SCROLL=100 (установлен в set_pointer_mode)
-            mouse_report.h = mouse_report.x;
-            mouse_report.v = -mouse_report.y;
-            mouse_report.x = 0;
-            mouse_report.y = 0;
             return mouse_report;
 
         case POINTER_MODE_CARET:
