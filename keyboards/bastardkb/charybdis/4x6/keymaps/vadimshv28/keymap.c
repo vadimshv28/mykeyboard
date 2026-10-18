@@ -22,24 +22,17 @@
 #include "process_unicode.h"
 #endif
 
-// Хелпер: отправка Alt-кода через NumPad (не зависит от Unicode)
-static void send_alt_code(const char *digits) {
-    register_code(KC_LALT);
-    for (const char *p = digits; *p; p++) {
-        switch (*p) {
-            case '0': tap_code16(KC_KP_0); break;
-            case '1': tap_code16(KC_KP_1); break;
-            case '2': tap_code16(KC_KP_2); break;
-            case '3': tap_code16(KC_KP_3); break;
-            case '4': tap_code16(KC_KP_4); break;
-            case '5': tap_code16(KC_KP_5); break;
-            case '6': tap_code16(KC_KP_6); break;
-            case '7': tap_code16(KC_KP_7); break;
-            case '8': tap_code16(KC_KP_8); break;
-            case '9': tap_code16(KC_KP_9); break;
-        }
-    }
-    unregister_code(KC_LALT);
+// Переключение раскладки Windows: Ctrl+1 — английская, Ctrl+2 — русская
+#define LANG_SWITCH_DELAY_MS 30
+
+static void os_lang_en(void) {
+    tap_code16(LCTL(KC_1));
+    wait_ms(LANG_SWITCH_DELAY_MS);
+}
+
+static void os_lang_ru(void) {
+    tap_code16(LCTL(KC_2));
+    wait_ms(LANG_SWITCH_DELAY_MS);
 }
 
 // Не определяем RGB коды напрямую, используем HSV
@@ -65,6 +58,7 @@ enum custom_keycodes {
     ALT_GUI,
     SCROLL,  // Momentary layer switch для скролла
     CARET,   // Momentary layer switch для каретки
+    NUMERO,  // Символ №: на миг русская раскладка + Shift+3
 };
 
 typedef enum {
@@ -93,6 +87,7 @@ static int16_t caret_mode_y        = 0;
 static uint16_t ru_rsft_timer     = 0;
 static uint16_t alt_last_release  = 0;
 static bool     alt_gui_mode      = false;
+static bool     caret_lang_switched = false;  // CARET включил английскую раскладку вместо русской
 
 // Адаптивный DPI трекбола
 #define DPI_MIN 450
@@ -102,13 +97,6 @@ static bool     alt_gui_mode      = false;
 #define SPEED_THRESHOLD_FAST 2
 
 static uint16_t current_dpi = DPI_MIN;
-
-#define SYMBOL_KEY_BASE  QK_USER
-#define SS(code_str) (SYMBOL_KEY_BASE + (\
-    (code_str[0] - '0') * 1000 + \
-    (code_str[1] - '0') * 100 + \
-    (code_str[2] - '0') * 10 + \
-    (code_str[3] - '0')))
 
 #define CARET_MODE_STEP 20
 
@@ -256,14 +244,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_TAB,  SS("0064"), SS("0059"), SS("0047"), SS("0061"), SS("0042"), SS("0040"), SS("0041"), SS("0060"), SS("0062"), SS("0035"), SS("0095"),
-       //       @          ;          /          =          *          (          )          <          >          #          _
+       KC_TAB,    KC_AT, KC_SCLN, KC_SLSH,  KC_EQL, KC_ASTR,    KC_LPRN, KC_RPRN,   KC_LT,   KC_GT, KC_HASH, KC_UNDS,
+       //           @        ;        /        =        *           (        )        <        >        #        _
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_LSFT, SS("0185"), SS("0058"), SS("0124"), SS("0037"), SS("0043"), SS("0091"), SS("0093"), SS("0044"), SS("0046"), SS("0034"), SS("0039"),
-       //       №         :          |          %          +          [          ]          ,          .          "          '
+       KC_LSFT,  NUMERO, KC_COLN, KC_PIPE, KC_PERC, KC_PLUS,    KC_LBRC, KC_RBRC, KC_COMM,  KC_DOT, KC_DQUO, KC_QUOT,
+       //           №        :        |        %        +           [        ]        ,        .        "        '
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_LCTL, SS("0036"), SS("0038"), SS("0092"), SS("0094"), SS("0045"), SS("0123"), SS("0125"), SS("0063"), SS("0033"), SS("0096"), SS("0126"),
-       //       $         &         \         ^         -         {         }         ?         !         `         ~
+       KC_LCTL,  KC_DLR, KC_AMPR, KC_BSLS, KC_CIRC, KC_MINS,    KC_LCBR, KC_RCBR, KC_QUES, KC_EXLM,  KC_GRV, KC_TILD,
+       //           $        &        \        ^        -           {        }        ?        !        `        ~
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
                                    XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX,
                                             _______, XXXXXXX,     XXXXXXX
@@ -344,43 +332,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         case CARET:
             if (record->event.pressed) {
+                // Символы слоя — обычные клавиши US-раскладки, поэтому на время слоя включаем английскую
+                caret_lang_switched = !layer_state_is(LAYER_BASE_EN);
+                if (caret_lang_switched) {
+                    os_lang_en();
+                }
                 layer_on(LAYER_CARET);
                 set_pointer_mode(POINTER_MODE_CARET);
             } else {
                 layer_off(LAYER_CARET);
                 set_pointer_mode(POINTER_MODE_MOUSE);
+                if (caret_lang_switched) {
+                    os_lang_ru();
+                    caret_lang_switched = false;
+                }
             }
             return false;
-    }
 
-    // Обработка SS() макросов - извлекаем код и отправляем Alt+код
-    if (keycode >= SYMBOL_KEY_BASE && keycode <= SYMBOL_KEY_BASE + 9999) {
-        if (record->event.pressed) {
-            uint16_t alt_code = keycode - SYMBOL_KEY_BASE;
-            // Конвертируем число в строку и отправляем Alt+код
-            char code_str[5];
-            if (alt_code < 10) {
-                code_str[0] = '0' + alt_code;
-                code_str[1] = '\0';
-            } else if (alt_code < 100) {
-                code_str[0] = '0' + (alt_code / 10);
-                code_str[1] = '0' + (alt_code % 10);
-                code_str[2] = '\0';
-            } else if (alt_code < 1000) {
-                code_str[0] = '0' + (alt_code / 100);
-                code_str[1] = '0' + ((alt_code / 10) % 10);
-                code_str[2] = '0' + (alt_code % 10);
-                code_str[3] = '\0';
-            } else {
-                code_str[0] = '0' + (alt_code / 1000);
-                code_str[1] = '0' + ((alt_code / 100) % 10);
-                code_str[2] = '0' + ((alt_code / 10) % 10);
-                code_str[3] = '0' + (alt_code % 10);
-                code_str[4] = '\0';
+        case NUMERO:
+            // В английской раскладке № нет: на миг русская, Shift+3, обратно английская
+            if (record->event.pressed) {
+                uint8_t mods = get_mods();
+                clear_mods();
+                os_lang_ru();
+                tap_code16(LSFT(KC_3));
+                os_lang_en();
+                set_mods(mods);
             }
-            send_alt_code(code_str);
-        }
-        return false;
+            return false;
     }
 
     return true;
